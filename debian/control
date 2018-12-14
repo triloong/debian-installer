@@ -80,6 +80,7 @@ Build-Depends:
 #	still called debian-boot..
 	syslinux [i386 amd64],
 	syslinux-utils [i386 amd64],
+	syslinux-efi [i386 amd64],
 	isolinux [i386 amd64],
 	pxelinux [i386 amd64],
 	syslinux-common (>= 3:6) [i386 amd64],
