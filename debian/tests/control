@@ -1,0 +1,3 @@
+Tests: general
+Depends: @builddeps@, xorriso, genisoimage, qemu-system, openssh-client, sleepenh, gpg, curl, ca-certificates, debian-keyring
+Restrictions: allow-stderr, needs-root
