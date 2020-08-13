@@ -32,16 +32,46 @@ test_url() {
 
 get_mirrors() {
 	local file
+	local line
 	for file in $@; do
-		[ -s $file ] || continue
-		grep '^deb[[:space:]]' $file | \
-		   grep -v '^deb[[:space:]]\+cdrom:' | \
-		   sed 's,^deb[[:space:]]\+\[[^]]*\][[:space:]]\+,deb ,' | \
-		   grep -v 'security.debian.org' | \
-		   grep '[[:space:]]main' | \
-		   awk '{print $1 " " $2}' | \
-		   sed 's,^deb file,deb copy,' | \
-		   sed 's,/* *$,,'
+		while read line
+		do
+			case $line in
+			deb[\	\ ]*) ;;  # nb. "deb[\\\t\\ ]*
+			*) continue ;;
+			esac
+
+			set -o noglob
+			set -- $line
+			set +o noglob
+			local options uri dist components
+			case $2 in
+			(\[*)
+				options="$2 "
+				uri=$3
+				dist=$4
+				shift 4
+				;;
+			(*)
+				options=
+				uri=$2
+				dist=$3
+				shift 3
+				;;
+			esac
+			components="${*}"
+
+			case $uri in
+			cdrom:*|*security.debian.org*|*volatile.debian.*)
+				continue
+				;;
+			file:*)
+				uri=copy:${uri#file:}
+				;;
+			esac
+
+			echo "deb ${options}${uri} ${dist} ${components}"
+		done < $file
 	done
 }
 
