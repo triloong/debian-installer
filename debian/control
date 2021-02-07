@@ -44,8 +44,6 @@ Build-Depends:
 #		them.
 #		Lintian: Yes, we know it's essential. We prefer not to
 #		count on it remaining so.
-	genisoimage [!s390 !s390x],
-#		For making mini isos.
 	genromfs [sparc sparc64],
 #		Used for creating sparc floppies (which are not built by
 #		default.)
