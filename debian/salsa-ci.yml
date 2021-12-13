@@ -44,7 +44,12 @@ stages:
     set -x
     cd build
     PRESEED=${CI_PROJECT_DIR}/devel_repo_preseed.cfg
-    echo d-i retriever/devel-udeb/url string ${CI_SERVER_URL}/${B2R_PROJECT_NAMESPACE}/${B2R_PROJECT_NAME}/-/jobs/${B2R_APTLY_JOB_ID}/artifacts/raw/public/ > $PRESEED
+    export APTLY_REPO="${CI_SERVER_URL}/${B2R_PROJECT_NAMESPACE}/${B2R_PROJECT_NAME}/-/jobs/${B2R_APTLY_JOB_ID}/artifacts/raw/public/"
+    echo d-i retriever/devel-udeb/url string ${APTLY_REPO} > $PRESEED
+    # ensure that the aptly repo gets inserted into the target system
+    echo d-i apt-setup/local0/comment string TESTING REPO from salsa.debian.net -- NOT FOR PRODUCTION >> $PRESEED
+    echo d-i apt-setup/local0/repository string deb ${APTLY_REPO} main >> $PRESEED
+    echo d-i apt-setup/local0/key string ${APTLY_REPO}/archive-key.pub   >> $PRESEED
     AVAIL_ABI=$(apt-cache show linux-headers-amd64 | sed -ne 's/Depends: linux-headers-\([0-9.-]*\)-amd64.*$/\1/p')
     SET_ABI=$(sed -ne 's/^LINUX_KERNEL_ABI\s*?=\s*\([0-9.-]*\)\s*$/\1/p' config/common)
     [ "$AVAIL_ABI" = "$SET_ABI" ] || printf "WARNING: using available ABI (%s) instead of the one set in the source (%s)\n"  "$AVAIL_ABI" "$SET_ABI"
