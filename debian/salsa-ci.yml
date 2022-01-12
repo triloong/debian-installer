@@ -96,6 +96,7 @@ openqa-link:
     OQA_ISO: 'salsa-$CI_PIPELINE_ID-gtk-mini.iso'
     OQA_BUILD: '-salsa-$CI_PIPELINE_ID:$CI_PROJECT_NAMESPACE:$CI_PROJECT_NAME:$CI_BUILD_REF_NAME'
     OQA_CI_PIPELINE_URL: '$CI_SERVER_URL/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/-/pipelines/$CI_PIPELINE_ID'
+    OQA_SALSA_RESULT_LINK: "$CI_API_V4_URL/projects/$CI_PROJECT_ID/statuses/$CI_BUILD_REF?pipeline_id=$CI_PIPELINE_ID&name=openqa&target_url=:target_url&state=:state"
   rules:
     - if: $B2R_TRIG_PIPELINE_ID
       variables:
