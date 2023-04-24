@@ -58,6 +58,7 @@ set -e
 PATH="${PATH}:/bin:/sbin:/usr/bin:/usr/sbin"
 export PATH
 
+LABELID="0xdeb00001"
 FSTYPE="fat32"
 PARTID="0x0c"
 FATSIZE="32"
@@ -339,6 +340,8 @@ case "${BUILDTYPE}" in
       exit 1
     fi
     sfdisk --force -u S "${TEMP_HD_IMAGEFILE}" 1>/dev/null 2>/dev/null <<EOF
+label: dos
+label-id: ${LABELID}
 ${BOOTLOADER_PARTID:+${BOOTLOADER_OFFSET}, $((${PARTOFFSET}-${BOOTLOADER_OFFSET})),${BOOTLOADER_PARTID},*,}
 ${PARTOFFSET}, ,${PARTID},*,
 EOF
