@@ -375,6 +375,10 @@ case "${BUILDTYPE}" in
         echo -n "bootable, "
         if [ "$LABELTYPE" = "gpt" ]; then
           echo -n "uuid=${BOOTLOADER_PARTUUID}, "
+          # ChromeOS kernel partition
+          if [ "${BOOTLOADER_PARTID}" = "FE3A2A5D-4F32-41A7-B725-ACCC3285A309" ]; then
+            echo -n 'attrs="GUID:48 GUID:52 GUID:56", '
+          fi
         fi
         echo
       fi
