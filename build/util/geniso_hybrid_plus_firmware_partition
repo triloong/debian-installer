@@ -9,6 +9,7 @@
 firmware_volume_size_M=6
 # max size 11 chars:  ----------- 
 firmware_volume_name="Firmware"
+firmware_volume_id="deb00001"
 
 iso="$1"
 
@@ -28,8 +29,8 @@ isohybrid -h "$heads" -s "$sectors" -u "$iso"
 # Make the firmware volume.
 tmpdir="$(mktemp -d)"
 firmware_volume_file="$tmpdir/fat"
-mkfs.msdos -n "$firmware_volume_name" -C "$firmware_volume_file" \
-	$(expr $firmware_volume_size_M \* 1024)
+mkfs.msdos --invariant -i "$firmware_volume_id" -n "$firmware_volume_name" \
+	-C "$firmware_volume_file" $(expr $firmware_volume_size_M \* 1024)
 
 # Combine images. 
 # XXX This wastes some space because isohybrid pads the iso to one
