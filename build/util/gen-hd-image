@@ -62,6 +62,8 @@ LABELTYPE="dos"
 LABELID="0xdeb00001"
 FSTYPE="fat32"
 PARTID="0x0c"
+PARTUUID="DEB00000-0000-0000-0000-000000000002"
+BOOTLOADER_PARTUUID="DEB00000-0000-0000-0000-000000000003"
 FATSIZE="32"
 BUILDTYPE="complete"
 SOURCEDIR="."
@@ -362,12 +364,29 @@ case "${BUILDTYPE}" in
       clean_tempfiles
       exit 1
     fi
-    sfdisk --force -u S "${TEMP_HD_IMAGEFILE}" 1>/dev/null 2>/dev/null <<EOF
-label: ${LABELTYPE}
-label-id: ${LABELID}
-${BOOTLOADER_PARTID:+${BOOTLOADER_OFFSET}, $((${PARTOFFSET}-${BOOTLOADER_OFFSET})),${BOOTLOADER_PARTID},*,}
-${PARTOFFSET}, ,${PARTID},*,
-EOF
+    {
+      echo "unit: sectors"
+      echo "label: ${LABELTYPE}"
+      echo "label-id: ${LABELID}"
+      if [ -n "$BOOTLOADER_PARTID" ]; then
+        echo -n "start=${BOOTLOADER_OFFSET}, "
+        echo -n "size=$((${PARTOFFSET}-${BOOTLOADER_OFFSET})), "
+        echo -n "type=${BOOTLOADER_PARTID}, "
+        echo -n "bootable, "
+        if [ "$LABELTYPE" = "gpt" ]; then
+          echo -n "uuid=${BOOTLOADER_PARTUUID}, "
+        fi
+        echo
+      fi
+      echo -n "start=${PARTOFFSET}, "
+      echo -n "size=+, "
+      echo -n "type=${PARTID}, "
+      echo -n "bootable, "
+      if [ "$LABELTYPE" = "gpt" ]; then
+        echo -n "uuid=${PARTUUID}, "
+      fi
+      echo
+    } | sfdisk --force "${TEMP_HD_IMAGEFILE}" 1>/dev/null 2>/dev/null
     ;;
 esac
 
