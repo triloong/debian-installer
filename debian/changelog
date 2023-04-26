@@ -18,6 +18,7 @@ debian-installer (202505XX) UNRELEASED; urgency=medium
   * gen-hd-image: Set fixed GPT partition UUIDs
   * gen-hd-image: Mark ChromeOS kernel partitions as bootable
   * Use gen-hd-image to build depthcharge disk images
+  * Build hd-media images for arm64
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 19 May 2025 01:54:15 +0200
 
