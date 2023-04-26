@@ -26,6 +26,7 @@ debian-installer (202505XX) UNRELEASED; urgency=medium
   * Build arm64 cdrom depthcharge image for "hana" boards
   * Move xz-compressed initramfs targets to top-level Makefile
   * Use xz-compressed initramfs in depthcharge images
+  * Build very small hd-media images as a 'tiny' flavour
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 19 May 2025 01:54:15 +0200
 
