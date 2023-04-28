@@ -12,6 +12,7 @@ debian-installer (202505XX) UNRELEASED; urgency=medium
   * Add dependencies to depthcharge image recipes
   * Make x86 depthcharge images configure partman to use GPT partitioning
   * Minimize kernel partition size in depthcharge images
+  * Create a second partition in depthcharge images
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 19 May 2025 01:54:15 +0200
 
