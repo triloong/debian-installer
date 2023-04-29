@@ -753,7 +753,7 @@ $(TEMP)/unifont.bdf: $(TEMP)/all.utf
 	mv $@.tmp $@
 
 $(TREE)/lib/unifont.bgf: $(TEMP)/unifont.bdf
-	bdftobogl -b $< > $@.tmp
+	LC_ALL=C.UTF-8 bdftobogl -b $< > $@.tmp
 	mv $@.tmp $@
 
 # The Hurd console uses BDF fonts instead
