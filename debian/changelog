@@ -38,6 +38,7 @@ debian-installer (20250804) UNRELEASED; urgency=medium
   * Set invariant mode, volume ID and label for mkfs.msdos calls
   * Use gen-tarball to generate armhf tarballs
   * Use xorriso to isohybridize x86 mini.iso images
+  * Make seagate network-console uInitrd reproducible
 
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
