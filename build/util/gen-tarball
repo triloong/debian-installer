@@ -16,6 +16,10 @@ if [ -z "$SOURCE_DIR" ] || [ -z "$OUTPUT_FILE" ]; then
 	exit 1
 fi
 
+# Ensure tarball doesn't depend on the user's umask(2).
+find "$SOURCE_DIR" -type d -print0 | xargs -0r chmod 755
+find "$SOURCE_DIR" -not -type d -print0 | xargs -0r chmod u+rw,g+r-w,o+r-w
+
 # Clamp timestamps to be no later than SOURCE_DATE_EPOCH, if defined in
 # the environment.  Typically it is the time of the most recent entry in
 # debian/changelog
