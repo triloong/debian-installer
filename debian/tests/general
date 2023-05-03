@@ -1,0 +1,166 @@
+#!/bin/sh
+
+set -exu
+
+env
+pwd
+
+# whether to download netinst.iso from cdimage.debian.org or build and use mini.iso
+#
+# it seems we cannot re-use the result of the package built because:
+# https://salsa.debian.org/salsa-ci-team/pipeline/issues/149
+#
+# TODO: decide what to do when running on ci.debian.net
+DLISO=n
+
+VERSION=$(LC_ALL=C dpkg-parsechangelog | grep ^Version: | cut -d ' ' -f 2)
+DATE=$(echo "$VERSION" | cut -d '.' -f 1)
+export SOURCE_DATE_EPOCH=$(date -d "$(dpkg-parsechangelog -SDate)" +%s)
+
+if [ $DLISO = y ]; then
+	# the following is based on:
+	# https://salsa.debian.org/salsa-ci-team/pipeline/issues/132
+
+	# alternative way to obtain iso:
+	baseurl=https://cdimage.debian.org/debian-cd/current/amd64/iso-cd
+	curl --output SHA512SUMS $baseurl/SHA512SUMS
+	curl --output SHA512SUMS.sign $baseurl/SHA512SUMS.sign
+	gpg --no-default-keyring --keyring /usr/share/keyrings/debian-role-keys.gpg --verify SHA512SUMS.sign SHA512SUMS
+	isoname=$(grep -E '  debian-[0-9.]+-amd64-netinst.iso' SHA512SUMS | awk '{print $2}')
+	curl --location --continue-at - --output "$isoname" "$baseurl/$isoname"
+	grep -E '  debian-[0-9.]+-amd64-netinst.iso' SHA512SUMS | sha512sum --check -
+else
+	# we build mini.iso again because we cannot access the build artifacts
+	# https://salsa.debian.org/salsa-ci-team/pipeline/issues/149
+	make -C build build_netboot USE_UDEBS_FROM=unstable BUILD_DATE=$DATE
+	isoname=build/dest/netboot/mini.iso
+fi
+
+# alternative ways to extract from iso9660 cd:
+#  bsdtar -C DESTINATION -xf debian-9.3.0-i386-netinst.iso
+#  7z x -oDESTINATION debian-9.3.0-i386-netinst.iso
+xorriso -osirrox on -indev "$isoname" -extract / netinst
+
+chmod -R u+w netinst
+
+[ -e ./id_rsa ] && [ -e ./id_rsa.pub ] || ssh-keygen -q -t rsa -f ./id_rsa -N ""
+
+cat > preseed.cfg << END
+d-i debian-installer/locale string en_US
+d-i keyboard-configuration/xkb-keymap select us
+d-i passwd/root-login boolean true
+d-i passwd/make-user boolean false
+d-i passwd/root-password password insecure
+d-i passwd/root-password-again password insecure
+d-i partman-auto/method string regular
+d-i partman-auto/disk string /dev/vda
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i base-installer/install-recommends boolean false
+tasksel tasksel/first multiselect ssh-server
+d-i pkgsel/upgrade select none
+d-i grub-installer/bootdev string /dev/vda
+d-i debian-installer/add-kernel-opts string net.ifnames=0 console=ttyS0
+d-i finish-install/reboot_in_progress note
+d-i debian-installer/exit/poweroff boolean true
+d-i preseed/late_command string mkdir --mode=0700 --parents /target/root/.ssh; echo $(cat ./id_rsa.pub) > /target/root/.ssh/authorized_keys
+END
+
+if [ $DLISO = y ]; then
+	mv preseed.cfg netinst/preseed.cfg
+fi
+
+
+if [ $DLISO = y ]; then
+	# options after the --- may be copied into the bootloader configuration for the installed system
+	cat > netinst/isolinux/isolinux.cfg << END
+default install
+label install
+  kernel /install.amd/vmlinuz
+  append initrd=/install.amd/initrd.gz auto-install/enable=true debconf/priority=critical preseed/file=/cdrom/preseed.cfg --- net.ifnames=0 console=ttyS0
+END
+
+	genisoimage -r -J \
+		-b isolinux/isolinux.bin \
+		-c isolinux/boot.cat \
+		-no-emul-boot -boot-load-size 4 -boot-info-table \
+		-o "$(basename "$isoname" .iso)-auto.iso" netinst
+else
+	# paths to kernel and initrd are different from the official netinst.iso
+	# for netinst.iso the preseed is on the iso, with mini.iso its over tftp
+	cat > netinst/isolinux.cfg << END
+default install
+label install
+  kernel linux
+  append initrd=initrd.gz auto-install/enable=true debconf/priority=critical preseed/url=tftp://10.0.2.2/preseed.cfg --- net.ifnames=0 console=ttyS0
+END
+
+	# paths to isolinux.bin and boot.cat are different from the official netinst.iso
+	genisoimage -r -J \
+		-b isolinux.bin \
+		-c boot.cat \
+		-no-emul-boot -boot-load-size 4 -boot-info-table \
+		-o "$(basename "$isoname" .iso)-auto.iso" netinst
+fi
+
+fallocate -l 4G disk.img
+
+# allow unclean environments by ignoring the user configuration
+QEMU_COMMON_OPTS="-no-user-config"
+# try kvm first and fall back to tcg
+QEMU_COMMON_OPTS="$QEMU_COMMON_OPTS -M accel=kvm:tcg"
+# avoid entropy starvation by feeding the crypt system with random bits from /dev/urandom
+QEMU_COMMON_OPTS="$QEMU_COMMON_OPTS -object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0"
+# the default memory size of 128 MiB is not enough for Debian
+QEMU_COMMON_OPTS="$QEMU_COMMON_OPTS -m 1G"
+# use a virtio network card instead of emulating a real network device
+QEMU_COMMON_OPTS="$QEMU_COMMON_OPTS -net nic,model=virtio"
+# we don't need any graphics
+# this also multiplexes the console and the monitor to stdio
+QEMU_COMMON_OPTS="$QEMU_COMMON_OPTS -nographic"
+# creates a multiplexed stdio backend connected to the serial port and the qemu
+# monitor
+QEMU_COMMON_OPTS="$QEMU_COMMON_OPTS -serial mon:stdio"
+
+# do the installation to disk.img
+qemu-system-x86_64 \
+	$QEMU_COMMON_OPTS \
+	-net user,tftp=$(pwd) \
+	-boot d \
+	-cdrom "$(basename "$isoname" .iso)-auto.iso" \
+	-drive file=disk.img,format=raw,if=virtio \
+	2>&1 | cat --show-nonprinting
+
+# boot into the new system
+qemu-system-x86_64 \
+	$QEMU_COMMON_OPTS \
+	-net user,hostfwd=tcp::10022-:22 \
+	-drive file=disk.img,format=raw,if=virtio \
+	>qemu.log </dev/null 2>&1 &
+
+# try to connect to it via ssh
+QEMUPID=$!
+trap "cat --show-nonprinting qemu.log; kill $QEMUPID" EXIT
+ssh="ssh -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no -i id_rsa -T"
+TIMESTAMP=$(sleepenh 0 || [ $? -eq 1 ])
+TIMEOUT=5
+NUM_TRIES=40
+i=0
+while true; do
+	rv=0
+	$ssh -p 10022 -o ConnectTimeout=$TIMEOUT root@localhost echo success || rv=1
+	[ $rv -eq 0 ] && break
+	TIMESTAMP=$(sleepenh $TIMESTAMP $TIMEOUT || [ $? -eq 1 ]);
+	i=$((i+1))
+	if [ $i -ge $NUM_TRIES ]; then break; fi
+done
+if [ $i -eq $NUM_TRIES ]; then
+	echo "timeout reached: unable to connect to qemu via ssh"
+	exit 1
+fi
+trap - EXIT
+$ssh -p 10022 root@localhost df -h
+$ssh -p 10022 root@localhost systemctl poweroff
+wait $QEMUPID
