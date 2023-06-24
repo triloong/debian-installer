@@ -74,6 +74,7 @@ NETBOOT_DIR = $(SOME_DEST)/$(EXTRANAME)$(NETBOOT_DI_DIR)
 NETBOOT_TAR = $(SOME_DEST)/$(EXTRANAME)netboot.tar.gz
 RAMDISK = $(SOME_DEST)/$(EXTRANAME)ramdisk.gz
 DEPTHCHARGE = $(SOME_DEST)/$(EXTRANAME)depthcharge
+U_BOOT = $(SOME_DEST)/$(EXTRANAME)u-boot
 MISC = $(foreach name,$(MISCNAME),$(SOME_DEST)/$(EXTRANAME)$(name))
 
 # some intersting files in tmp/ we may need
@@ -95,6 +96,7 @@ TEMP_CD_TREE = $(TEMP)/cd_tree
 TEMP_POWERPC_INITRD = $(TEMP)/powerpc_initrd_tree
 TEMP_GRUB_EFI = $(TEMP)/grub_efi
 TEMP_DEPTHCHARGE = $(TEMP)/depthcharge
+TEMP_U_BOOT = $(TEMP)/u-boot
 
 DPKGDIR = $(TREE)/var/lib/dpkg
 

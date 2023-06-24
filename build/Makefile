@@ -932,6 +932,19 @@ $(DEPTHCHARGE): $(TEMP_DEPTHCHARGE)
 
 $(TEMP_DEPTHCHARGE): arch_depthcharge
 
+# U-Boot binaries for supported devices
+$(U_BOOT): $(TEMP_U_BOOT)
+	rm -rf $(SOME_DEST)/$(EXTRANAME)/u-boot
+	mkdir -p $(SOME_DEST)/$(EXTRANAME)/u-boot
+	cp -a $(TEMP_U_BOOT)/* $@
+	for file in $@/*; do \
+		target=$$(basename $${file%%.*}); \
+		manifest=$$(echo $(MANIFEST-U_BOOT) for "$$target"); \
+		update-manifest "$$file" "$$manifest" $(UDEB_LISTS); \
+	done
+
+$(TEMP_U_BOOT): arch_u-boot
+
 $(MISC): TEMP_REAL_MISC = $(shell echo ./$@ |sed 's,$(SOME_DEST)/$(EXTRANAME),,')
 $(MISC): 
 	install -p -m 644 $(TEMP_REAL_MISC) $(SOME_DEST)/$(EXTRANAME)
