@@ -919,9 +919,23 @@ $(NETBOOT_TAR): $(TEMP_NETBOOT_DIR)
 	gen-tarball $(TEMP_NETBOOT_DIR) $@
 	update-manifest $@ $(MANIFEST-NETBOOT_TAR) $(UDEB_LISTS)
 
+# a directory full of files for an auxiliary partition
+$(HD_MEDIA_DIR): $(TEMP_HD_MEDIA_DIR)
+	cp -a $(TEMP_HD_MEDIA_DIR)/* $@
+	update-manifest $@ $(MANIFEST-HD_MEDIA_DIR) $(UDEB_LISTS)
+
+# a tarball for files for an auxiliary partition
+$(HD_MEDIA_TAR): $(TEMP_HD_MEDIA_DIR)
+	# Create an version info file.
+	echo 'Debian version:  $(DEBIAN_VERSION)' > $(TEMP_HD_MEDIA_DIR)/version.info
+	echo 'Installer build: $(BUILD_DATE)' >> $(TEMP_HD_MEDIA_DIR)/version.info
+	gen-tarball $(TEMP_HD_MEDIA_DIR) $@
+	update-manifest $@ $(MANIFEST-HD_MEDIA_TAR) $(UDEB_LISTS)
+
 $(TEMP_BOOT_SCREENS): arch_boot_screens
 $(TEMP_CD_INFO_DIR): arch_cd_info_dir
 $(TEMP_NETBOOT_DIR): arch_netboot_dir
+$(TEMP_HD_MEDIA_DIR): arch_hd-media_dir
 
 # disk/partition images for ChromeOS devices
 $(DEPTHCHARGE): $(TEMP_DEPTHCHARGE)
