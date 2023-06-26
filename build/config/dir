@@ -77,6 +77,7 @@ HD_MEDIA_TAR = $(SOME_DEST)/$(EXTRANAME)hd-media.tar.gz
 RAMDISK = $(SOME_DEST)/$(EXTRANAME)ramdisk.gz
 DEPTHCHARGE = $(SOME_DEST)/$(EXTRANAME)depthcharge
 U_BOOT = $(SOME_DEST)/$(EXTRANAME)u-boot
+U_BOOT_MEDIA = $(SOME_DEST)/$(EXTRANAME)SD-card-images
 MISC = $(foreach name,$(MISCNAME),$(SOME_DEST)/$(EXTRANAME)$(name))
 
 # some intersting files in tmp/ we may need
@@ -100,6 +101,7 @@ TEMP_POWERPC_INITRD = $(TEMP)/powerpc_initrd_tree
 TEMP_GRUB_EFI = $(TEMP)/grub_efi
 TEMP_DEPTHCHARGE = $(TEMP)/depthcharge
 TEMP_U_BOOT = $(TEMP)/u-boot
+TEMP_U_BOOT_MEDIA = $(TEMP)/SD-card-images
 
 DPKGDIR = $(TREE)/var/lib/dpkg
 

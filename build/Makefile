@@ -959,6 +959,15 @@ $(U_BOOT): $(TEMP_U_BOOT)
 
 $(TEMP_U_BOOT): arch_u-boot
 
+# disk/partition images for U-Boot systems
+$(U_BOOT_MEDIA): $(TEMP_U_BOOT_MEDIA)
+	rm -rf $(SOME_DEST)/$(EXTRANAME)/SD-card-images
+	mkdir -p $(SOME_DEST)/$(EXTRANAME)/SD-card-images
+	cp -a $(TEMP_U_BOOT_MEDIA)/* $@
+	update-manifest $@ $(MANIFEST-U_BOOT_MEDIA) $(UDEB_LISTS)
+
+$(TEMP_U_BOOT_MEDIA): arch_u-boot_media
+
 $(MISC): TEMP_REAL_MISC = $(shell echo ./$@ |sed 's,$(SOME_DEST)/$(EXTRANAME),,')
 $(MISC): 
 	install -p -m 644 $(TEMP_REAL_MISC) $(SOME_DEST)/$(EXTRANAME)
