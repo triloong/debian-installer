@@ -13,6 +13,9 @@ variables:
   SALSA_CI_DISABLE_BLHC: 1
   SALSA_CI_DISABLE_CROSSBUILD_ARM64: 1
 
+  # build on arm64
+  SALSA_CI_DISABLE_BUILD_PACKAGE_ARM64: 0
+
 # In the normal pipeline, we run `build` as usual, and then provide an
 # `Test with openQA` job for launching some openQA tests of the mini-ISO
 # result. (on salsa, building anything more than a mini-ISO exceeds limits)
@@ -53,6 +56,18 @@ variables:
 
 build:
   extends: .di-build-definition
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
+    - when: on_success
+
+build arm64:
+  extends: .di-build-definition
+  image: $SALSA_CI_IMAGES_BASE_ARM64
+  variables:
+    BUILD_ARCH: 'arm64'
+  tags:
+    - arm64
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
