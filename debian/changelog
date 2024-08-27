@@ -1,3 +1,9 @@
+debian-installer (20210731+deb11u12) bullseye; urgency=medium
+
+  * Bump Linux kernel ABI to 5.10.0-32.
+
+ -- Cyril Brulebois <kibi@debian.org>  Tue, 27 Aug 2024 08:14:31 +0200
+
 debian-installer (20210731+deb11u11) bullseye; urgency=medium
 
   * Bump Linux kernel ABI to 5.10.0-30.
