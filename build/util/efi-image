@@ -196,8 +196,9 @@ done
 
 # Specify a deterministic volume ID; we use DOS_VOLUME_ID here for
 # consistency.
+DOS_VOLUME_ID="$(printf "%08x" $((${SOURCE_DATE_EPOCH}%4294967296)))"
 echo "$0: Running first pass of mkfs.msdos with size $size blocks"
-mkfs.msdos --invariant -v -i deb00001 -C "$outdir/efi.img" $size
+mkfs.msdos --invariant -v -i "$DOS_VOLUME_ID" -C "$outdir/efi.img" $size
 copy_files_into_image
 
 # The worst-case calculations above are potentially giving
@@ -214,7 +215,7 @@ size=$(($size + 32 - ($cluster_blocks * $clusters_free)))
 
 echo "$0: Running second pass of mkfs.msdos with size $size blocks"
 rm -f "$outdir/efi.img"
-mkfs.msdos --invariant -v -i deb00001 -C "$outdir/efi.img" $size
+mkfs.msdos --invariant -v -i "$DOS_VOLUME_ID" -C "$outdir/efi.img" $size
 copy_files_into_image
 clusters_free=$(count_free_clusters "$outdir/efi.img")
 echo "$0: Second pass has $clusters_free free clusters"
