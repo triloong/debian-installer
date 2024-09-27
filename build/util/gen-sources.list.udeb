@@ -34,6 +34,12 @@ get_mirrors() {
 	local file
 	for file in $@; do
 		[ -s $file ] || continue
+		case "$file" in
+			*.sources)
+				parse-deb822-mirrors "$file"
+				continue
+				;;
+		esac
 		grep '^deb[[:space:]]' $file | \
 		   grep -v '^deb[[:space:]]\+cdrom:' | \
 		   sed 's,^deb[[:space:]]\+\[[^]]*\][[:space:]]\+,deb ,' | \

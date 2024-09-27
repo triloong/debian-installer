@@ -1,0 +1,123 @@
+#!/usr/bin/perl
+
+# Deb822-style APT source parser for gen-sources.list.udeb
+#
+# Modified from Debian::Debhelper::Dh_Lib, originally:
+#   Library functions for debhelper programs, perl version.
+#   Joey Hess, GPL copyright 1997-2008.
+
+use v5.28;
+use warnings;
+use utf8;
+
+# Disable unicode_strings for now until a better solution for
+# Debian#971362 comes around.
+no feature 'unicode_strings';
+
+# From Policy 5.1:
+#
+#  The field name is composed of US-ASCII characters excluding control
+#  characters, space, and colon (i.e., characters in the ranges U+0021
+#  (!) through U+0039 (9), and U+003B (;) through U+007E (~),
+#  inclusive). Field names must not begin with the comment character
+#  (U+0023 #), nor with the hyphen character (U+002D -).
+my $DEB822_FIELD_REGEX = qr/
+	    [\x21\x22\x24-\x2C\x2F-\x39\x3B-\x7F]  # First character
+	    [\x21-\x39\x3B-\x7F]*                  # Subsequent characters (if any)
+    /xoa;
+
+my ($field_name, %field_values, %seen_fields, %seen_uris, $file);
+
+sub strip_spaces {
+    my ($v) = @_;
+    return if not defined($v);
+    $v =~ s/^\s++//;
+    $v =~ s/\s++$//;
+    return $v;
+}
+
+sub parse_deb822_sources {
+    my ($f) = @_;
+
+    my $fd;
+    if (not defined $f) {
+        $fd = *STDIN;
+    } elsif (not open($fd, '<', $f)) {
+        die "cannot open file $f: $!\n";
+    };
+
+    while (<$fd>) {
+        chomp;
+        s/\s+$//;
+        if (m/^\#/) {
+            # Skip unless EOF for the special case where the last line
+            # is a comment line directly after the last stanza.  In
+            # that case we need to "commit" the last stanza as well or
+            # we end up omitting the last.
+            next if not eof;
+            $_  = '';
+        }
+
+        if (/^\s/) {
+            # Continuation line
+            if (not %seen_fields) {
+                die "Continuation line seen outside stanza in sources file (line $.)\n";
+            }
+            s/^\s[.]?//;
+            $field_values{$field_name} .= ' ' . $_;
+            # Ensure it is not completely empty or the code below will assume the paragraph ended
+            $_ = '.' if not $_;
+        } elsif (not $_ and not %seen_fields) {
+            # Ignore empty lines before first stanza
+            next;
+        } elsif ($_) {
+            my ($value);
+            if (m/^($DEB822_FIELD_REGEX):\s*(.*)/o) {
+                ($field_name, $value) = (lc($1), $2);
+                if (exists($seen_fields{$field_name})) {
+                    my $first_time = $seen_fields{$field_name};
+                    warn "${field_name}-field appears twice in the same stanza of sources file. " .
+                          "First time on line $first_time, second time: $.\n";
+                }
+                $seen_fields{$field_name} = $.;
+                $field_values{$field_name} = $value;
+            } else {
+                # Invalid file
+                die "Parse error in sources file, line $., read: $_\n";
+            }
+        }
+        if (!$_ or eof) { # end of stanza.
+            if (%field_values) {
+                my $enabled = strip_spaces($field_values{'enabled'} // 'yes');
+                my $types = strip_spaces($field_values{'types'} // '');
+                my $uris = strip_spaces($field_values{'uris'} // '');
+                my $suites = strip_spaces($field_values{'suites'} // '');
+                my $components = strip_spaces($field_values{'components'} // '');
+
+                if (not $enabled =~ /(^|\s)no(\s|$)/ and $types =~ /(^|\s)deb(\s|$)/ and
+                    ($suites =~ /\/main(\s|$)/ or $components =~ /(^|\s)main(\s|$)/)
+                ) {
+                    foreach my $uri (split " ", $uris) {
+                        next if $uri =~ /^cdrom:/;
+                        next if $uri =~ /security\.debian\.org/;
+                        $uri =~ s/^file/copy/;
+                        $uri =~ s/\/* *$//;
+                        print "deb $uri\n" unless $seen_uris{$uri};
+                        $seen_uris{$uri} = 1;
+                    }
+                }
+            }
+            %field_values = ();
+            %seen_fields = ();
+        }
+    }
+    close($fd);
+}
+
+if (int(@ARGV) > 0) {
+    foreach my $file (@ARGV) {
+        parse_deb822_sources $file;
+    }
+} else {
+    parse_deb822_sources;
+}

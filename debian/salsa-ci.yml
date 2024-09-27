@@ -75,9 +75,6 @@ variables:
   extends: .build-definition-common
   variables:
     SALSA_CI_SBUILD_ARGS: "--enable-network"
-    # gen-sources.list.udeb does not grok deb822 format (as used on salsa),
-    # so we need this to tell the build from where to get udebs:
-    MIRROR: "http://deb.debian.org/debian"
   script:
     - *di-script-build-definition
 
@@ -186,14 +183,13 @@ openqa-link:
       artifacts: true
   allow_failure: true
 
-# the deb822 problem breaks these tests, so let's allow them to fail for now:
+# The debian installer-artifacts are not reproducible yet:
 reprotest:
   extends: .test-reprotest
   allow_failure: true
 
 test-build-any:
   extends: .test-build-package-any
-  allow_failure: true
 
 ABI-check:
   stage: test
