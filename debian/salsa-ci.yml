@@ -11,6 +11,9 @@ variables:
   # this ensures we don't exceed salsa's artifact limit when building in CI
   DEB_BUILD_PROFILES: pkg.debian-installer.miniiso
 
+  # Reprotest should check our images tarball as well
+  SALSA_CI_REPROTEST_ARTIFACT_PATTERN: 'debian-installer-images_*.tar.gz *.deb'
+
 # In the normal pipeline, we run `build` as usual, and then provide a
 # `Test with openQA` job for launching some openQA tests of the mini-ISO
 # result. (on salsa, building anything more than a mini-ISO exceeds limits)
