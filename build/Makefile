@@ -420,7 +420,7 @@ endif
 	merge-usr "$(TREE)"
 
 ifeq ($(DEB_HOST_ARCH_OS),linux)
-ifneq ($(DEB_HOST_ARCH),mips64el)
+ifeq ($(filter $(DEB_HOST_ARCH),mips64el hppa),)
 	# XXX: Compensate (at least temporarily) for kernel-image's now shipping
 	# a versioned vmlinuz-* instead of just vmlinuz (in sid, since 6.6.8-1);
 	# ditto for vmlinux-* on some archs (e.g. ppc64el). Keep it on mips64el
