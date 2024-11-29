@@ -850,6 +850,13 @@ $(ROOT): $(TEMP_ROOT)
 
 $(TEMP_ROOT): $(TEMP_INITRD) arch_root
 
+# miniature UEFI UKI with only one boot image
+$(MINIEFI): $(TEMP_MINIEFI)
+	install -p -m 644 -D $(TEMP_MINIEFI) $@
+	update-manifest $@ $(MANIFEST-MINIEFI) $(UDEB_LISTS)
+
+$(TEMP_MINIEFI): $(TEMP_BOOT_SCREENS) arch_miniefi
+
 # miniature ISOs with only a boot image
 $(MINIISO): $(TEMP_MINIISO)
 	install -p -m 644 -D $(TEMP_MINIISO) $@

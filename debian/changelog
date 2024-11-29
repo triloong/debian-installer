@@ -10,6 +10,8 @@ debian-installer (202409XX) UNRELEASED; urgency=medium
   * Add monolithic support for riscv64.
   * Update riscv64 grub config to use UEFI Graphics Output Protocol if
     available.
+  * Create a UEFI Unified Kernel Image (UKI) for the netboot and monolithic
+    targets on riscv64.
 
   [ Ben Hutchings ]
   * Update pkg-lists to make kernel udebs removed in 6.11.2-1 optional

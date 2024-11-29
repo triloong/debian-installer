@@ -128,6 +128,8 @@ Build-Depends:
 #		u-boot-sunxi to produce bootable arm64 images.
 	u-boot (>= 2016.01+dfsg1-1~) [armel],
 #		U-boot binaries for armel systems
+	systemd-boot-efi [riscv64], systemd-ukify [riscv64],
+#		UEFI Unified Kernel Image (UKI) on riscv64 systems
 #
 # Architecture specific build dependencies:
 	tofrodos [i386 amd64],
