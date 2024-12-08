@@ -57,7 +57,7 @@
 export MTOOLS_SKIP_CHECK=1
 
 # Temporary workaround for #1036019:
-export DRM_DIR := /lib/modules/$(KERNELVERSION)/kernel/drivers/gpu/drm
+export DRM_DIR := /usr/lib/modules/$(KERNELVERSION)/kernel/drivers/gpu/drm
 ifndef DRM_MODULES
 export DRM_MODULES :=          \
 	drm_shmem_helper.ko    \
