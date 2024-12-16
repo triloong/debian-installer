@@ -465,10 +465,10 @@ ifneq (,$(filter $(ARCH),amd64 arm64 i386))
 	# HACK alert (#1036019): this isn't just a problem for the graphical
 	# installer, complement fb-modules with extra modules for all images
 	# including DRM modules.
-	if [ -e "$(DRM_DIR)/drm.ko" ]; then \
+	if [ -e "$(DRM_DIR)/drm.ko.xz" ]; then \
 		for module in $(DRM_MODULES); do \
 			mkdir -p $(TREE)$(DRM_DIR)/$$(dirname $$module); \
-			cp $(DRM_DIR)/$$module $(TREE)$(DRM_DIR)/$$module; \
+			cp $(DRM_DIR)/$$module.xz $(TREE)$(DRM_DIR)/$$module.xz; \
 		done; \
 	fi
 endif
