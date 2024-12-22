@@ -25,7 +25,7 @@ debian-installer (202409XX) UNRELEASED; urgency=medium
   * Add console-setup-pc-ekmap for arm64 and armhf cdrom. Closes: #1089010.
 
   [ Timothy Pearson ]
-  * Add fb-modules for ppc64 and ppc64le cdrom.  Closes: #1037186.
+  * Add fb-modules for ppc64 and ppc64el cdrom and netboot. Closes: #1037186.
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 23 Sep 2024 16:38:37 +0200
 
