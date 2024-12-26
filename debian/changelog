@@ -6,6 +6,9 @@ debian-installer (202409XX) UNRELEASED; urgency=medium
   * Set DRM_DIR using /usr/lib/… instead of /lib/… since the former is where
     linux-image-* packages ship their modules.
   * Update translation-status for the release.
+  * Drop the “12” version from the Emerald boot screen: drop the SVG paths
+    for the 1 and 2 digits after the Debian logo and name, to avoid any
+    confusion until the Ceratopsian theme gets integrated.
 
   [ Aurelien Jarno ]
   * Add riscv64 to RELEASE_ARCHES in order to use udebs from testing. Do not
