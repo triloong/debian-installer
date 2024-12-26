@@ -5,6 +5,7 @@ debian-installer (202409XX) UNRELEASED; urgency=medium
   * Bump (temporary) linux-image build-deps accordingly.
   * Set DRM_DIR using /usr/lib/… instead of /lib/… since the former is where
     linux-image-* packages ship their modules.
+  * Update translation-status for the release.
 
   [ Aurelien Jarno ]
   * Add riscv64 to RELEASE_ARCHES in order to use udebs from testing. Do not
