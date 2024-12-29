@@ -116,7 +116,7 @@ mini-ISO:
         cat > $WORKING_DIR/source_dir/build/sources.list.udeb.local <<-EOF
       		# created in salsa-ci.yml:build:before_script in order to add aptly repo as an extra source
       		deb [trusted=yes] copy:$WORKING_DIR/source_dir/build/ localudebs/
-      		deb http://deb.debian.org/debian unstable main/debian-installer
+      		deb [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg] http://deb.debian.org/debian unstable main/debian-installer
       		deb [signed-by=$keyfile] $APTLY_REPO/debian-installer
       		EOF
 
