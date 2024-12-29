@@ -28,9 +28,9 @@ variables:
     # gen-sources.list.udeb does not grok deb822 format (as used on salsa),
     # so we need this to tell the build from where to get udebs:
     MIRROR: "http://deb.debian.org/debian"
-  before_script:
+  script:
+    - !reference [.build-package, script]
     - export
-  after_script:
     - |
       for BUILD_JOB_ISO in $(realpath --relative-base=. $WORKING_DIR)/*.iso; do break; done
       cat >> ${CI_PROJECT_DIR}/salsa.env <<-EOF
@@ -42,7 +42,8 @@ variables:
 
 extract-source:
   extends: .provisioning-extract-source
-  after_script:
+  script:
+    - !reference [.provisioning-extract-source, script]
     - export
     - head -v ${CI_PROJECT_DIR}/salsa.env
     - |
@@ -103,8 +104,7 @@ mini-ISO:
         # this variable setting is available to debian/rules: build-image: make
         PRESEED: $CI_PROJECT_DIR/devel_repo_preseed.cfg
     - when: on_success
-  before_script:
-    - export
+  script:
     - |
       if [ "$APTLY_REPO" ]; then
         # decode & save the repo's base64-encoded key
@@ -134,6 +134,7 @@ mini-ISO:
       		d-i apt-setup/_DEVEL_/key string base64://$APTLY_REPO_KEY_BASE64
       		EOF
       fi
+    - !reference [.di-build-definition, script]
 
 .openqa-link-definition:
   stage: test
