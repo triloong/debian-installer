@@ -32,10 +32,10 @@ variables:
     - !reference [.build-package, script]
     - export
     - |
-      for BUILD_JOB_ISO in $(realpath --relative-base=. $WORKING_DIR)/*.iso; do break; done
+      for BUILD_JOB_ISO_FULL in $WORKING_DIR/*.iso; do break; done
       cat >> ${CI_PROJECT_DIR}/salsa.env <<-EOF
       	BUILD_JOB_URL=$CI_JOB_URL
-      	BUILD_JOB_ISO=$BUILD_JOB_ISO
+      	BUILD_JOB_ISO=${BUILD_JOB_ISO_FULL#$CI_PROJECT_DIR}
       	BUILD_JOB_DEBIAN_BUILD_ID=$(echo $BUILD_JOB_ISO|sed -nE 's%.*/debian-(.*)-gtkmini.iso%\1%p')
       	EOF
     - head -v ${CI_PROJECT_DIR}/salsa.env
