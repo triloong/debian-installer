@@ -1,3 +1,11 @@
+debian-installer (202501XX) UNRELEASED; urgency=medium
+
+  [ Alper Nebi Yasak ]
+  * Use simple assignment for dpkg-architecture variables in Makefile
+    (Closes: #1091537)
+
+ -- Alper Nebi Yasak <alpernebiyasak@gmail.com>  Thu, 02 Jan 2025 01:02:03 +0300
+
 debian-installer (20241227) unstable; urgency=medium
 
   [ Cyril Brulebois ]
