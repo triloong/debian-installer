@@ -8,6 +8,9 @@ debian-installer (202501XX) UNRELEASED; urgency=medium
   * Bump Linux kernel ABI to 6.12.8.
   * Bump (temporary) linux-image build-deps accordingly.
 
+  [ Niels Thykier ]
+  * Set `Rules-Requires-Root: binary-targets` (Closes: #1091668).
+
  -- Alper Nebi Yasak <alpernebiyasak@gmail.com>  Thu, 02 Jan 2025 01:02:03 +0300
 
 debian-installer (20241227) unstable; urgency=medium
