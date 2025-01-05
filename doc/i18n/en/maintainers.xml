@@ -460,6 +460,61 @@ templates file.
 </para>
 
 </sect2>
+
+<sect2>
+<title>Moving template strings to another sublevel</title>
+
+<para>
+If you encounter, that some strings are classified in the wrong sublevel,
+it's easy to correct this and move them into another sublevel, without
+loosing translations (or bother translators at all with this).
+</para>
+
+<para>
+Here is how to do it (in this example, move strings from sublevel1 to 3):
+</para>
+
+<itemizedlist>
+<listitem>
+<para>
+in the debian/*.templates file of the package (like anna, netcfg, ...), correct
+the <command>:slX:</command> comment of the relevant strings (here: change
+from <command>:sl1:</command> into <command>:sl3:</command>);
+</para>
+</listitem>
+<listitem>
+<para>
+remove the strings from the package's debian/po/*.pot file completely;
+</para>
+</listitem>
+<listitem>
+<para>
+execute <command>debconf-updatepo</command> in the package's root directory;
+this will re-add the strings to debian/po/*.pot with the corrected sublevel entry
+as well as change the <command>:slX:</command> entries in all *.po files;
+</para>
+</listitem>
+<listitem>
+<para>
+push all changed files to package's git repository;
+</para>
+</listitem>
+<listitem>
+<para>
+in <command>packages/po/</command> remove the strings from the *.pot file of
+that sublevel, where the strings reside before the change (in this example:
+sublevel1) and push to git;
+</para>
+</listitem>
+<listitem>
+<para>
+wait for the next l10n-sync run (usually in the following night); that will
+make the strings be moved (here: from sublevel1 to 3) in *.po and *.pot files.
+</para>
+</listitem>
+</itemizedlist>
+
+</sect2>
 </sect1>
 
 <sect1>
