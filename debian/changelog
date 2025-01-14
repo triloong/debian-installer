@@ -11,6 +11,10 @@ debian-installer (202501XX) UNRELEASED; urgency=medium
   [ Niels Thykier ]
   * Set `Rules-Requires-Root: binary-targets` (Closes: #1091668).
 
+  [ Helge Deller ]
+  * hppa: Add some important kernel modules to hppa cdrom image to avoid
+    dependency of current kernel in debian-ports archive
+
  -- Alper Nebi Yasak <alpernebiyasak@gmail.com>  Thu, 02 Jan 2025 01:02:03 +0300
 
 debian-installer (20241227) unstable; urgency=medium
