@@ -15,6 +15,9 @@ debian-installer (202501XX) UNRELEASED; urgency=medium
   * hppa: Add some important kernel modules to hppa cdrom image to avoid
     dependency of current kernel in debian-ports archive
 
+  [ Samuel Thibault ]
+  * hurd-amd64: Fix xen kernel package name.
+
  -- Alper Nebi Yasak <alpernebiyasak@gmail.com>  Thu, 02 Jan 2025 01:02:03 +0300
 
 debian-installer (20241227) unstable; urgency=medium
