@@ -7,6 +7,8 @@ debian-installer (202501XX) UNRELEASED; urgency=medium
   [ Cyril Brulebois ]
   * Bump Linux kernel ABI to 6.12.16.
   * Bump (temporary) linux-image build-deps accordingly.
+  * Stop called depmod with deprecated option -q, ignored by kmod v33, and
+    now rejected by kmod v34.
 
   [ Niels Thykier ]
   * Set `Rules-Requires-Root: binary-targets` (Closes: #1091668).

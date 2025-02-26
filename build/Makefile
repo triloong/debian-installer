@@ -487,7 +487,7 @@ endif
 		[ -z "$$sysmap_name" ] || sysmap_opt="-F $$sysmap_name"; \
 		if [ -d $(TREE)/lib/modules/$(VERSION) ] && [ -z "$(OMIT_DEPMOD)" ]; then \
 			mkdir -p $(TREE)/lib/modules/$(VERSION)/kernel; \
-			$(shell choose-subarch-env $(VERSION)) depmod $$sysmap_opt -q -a -b $(TREE)/ $(VERSION); \
+			$(shell choose-subarch-env $(VERSION)) depmod $$sysmap_opt -a -b $(TREE)/ $(VERSION); \
 		fi; \
 		[ -z "$$sysmap_name" ] || mv $$sysmap_name $(TEMP);)
 
