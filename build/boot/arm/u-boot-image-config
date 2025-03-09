@@ -11,7 +11,6 @@ Novena  /usr/lib/u-boot/novena-rawsd/SPL 2 /usr/lib/u-boot/novena-rawsd/u-boot.i
 #
 # Images from u-boot-omap
 BeagleBoneBlack /usr/lib/u-boot/am335x_boneblack/MLO 256 /usr/lib/u-boot/am335x_boneblack/u-boot.img 768
-PandaBoard /usr/lib/u-boot/omap4_panda/MLO 256 /usr/lib/u-boot/omap4_panda/u-boot.img 768
 BeagleBoard-X15 /usr/lib/u-boot/am57xx_evm/MLO 256 /usr/lib/u-boot/am57xx_evm/u-boot.img 768
 #
 # Images from u-boot-sunxi
