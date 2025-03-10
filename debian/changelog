@@ -1,3 +1,10 @@
+debian-installer (20230607+deb12u10) bookworm; urgency=medium
+
+  * Bump Linux kernel ABI to 6.1.0-32.
+  * Adjust linux-image build-deps as well.
+
+ -- Cyril Brulebois <kibi@debian.org>  Mon, 10 Mar 2025 13:28:07 +0100
+
 debian-installer (20230607+deb12u9) bookworm; urgency=medium
 
   * Bump Linux kernel ABI to 6.1.0-29.
