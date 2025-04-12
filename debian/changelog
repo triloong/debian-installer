@@ -20,6 +20,9 @@ debian-installer (202501XX) UNRELEASED; urgency=medium
   [ Samuel Thibault ]
   * hurd-amd64: Fix xen kernel package name.
 
+  [ Holger Wansing ]
+  * Drop support for win32-loader.
+
  -- Alper Nebi Yasak <alpernebiyasak@gmail.com>  Thu, 02 Jan 2025 01:02:03 +0300
 
 debian-installer (20241227) unstable; urgency=medium
