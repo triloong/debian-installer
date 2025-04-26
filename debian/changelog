@@ -19,6 +19,7 @@ debian-installer (202501XX) UNRELEASED; urgency=medium
 
   [ Samuel Thibault ]
   * hurd-amd64: Fix xen kernel package name.
+  * control: Drop gnupg build-dependency, not used by apt any more.
 
   [ Holger Wansing ]
   * Drop support for win32-loader.

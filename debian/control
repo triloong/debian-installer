@@ -15,8 +15,6 @@ Build-Depends:
 # 		Used for downloading udebs.
 	apt-utils,
 # 		apt-ftparchive is used for including localudebs.
-	gnupg,
-#		New versions of apt need gnupg for security checks.
 	debian-archive-keyring (>= 2006.11.22),
 #		To provide the archive key for security checks.
 	dctrl-tools,
