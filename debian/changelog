@@ -3,6 +3,7 @@ debian-installer (202501XX) UNRELEASED; urgency=medium
   [ Alper Nebi Yasak ]
   * Use simple assignment for dpkg-architecture variables in Makefile
     (Closes: #1091537)
+  * [arm64] Increase SD card image sizes for netboot, netboot-gtk
 
   [ Cyril Brulebois ]
   * Bump Linux kernel ABI to 6.12.25.
