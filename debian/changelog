@@ -1,6 +1,7 @@
 debian-installer (20230607+deb12u11) UNRELEASED; urgency=medium
 
   * Bump Linux kernel ABI to 6.1.0-35.
+  * Adjust linux-image build-deps as well.
 
  -- Cyril Brulebois <kibi@debian.org>  Sun, 27 Apr 2025 01:07:27 +0200
 
