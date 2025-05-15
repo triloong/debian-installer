@@ -27,6 +27,13 @@ debian-installer (202501XX) UNRELEASED; urgency=medium
   [ Holger Wansing ]
   * Drop support for win32-loader.
 
+  [ Vagrant Cascadian ]
+  * armhf: Drop u-boot image for PandaBoard, support was removed from
+    u-boot upstream version 2024.10.
+
+  [ Steve McIntyre ]
+  * Add initial support for the Ceratopsian theme (Debian 13).
+
  -- Alper Nebi Yasak <alpernebiyasak@gmail.com>  Thu, 02 Jan 2025 01:02:03 +0300
 
 debian-installer (20241227) unstable; urgency=medium
