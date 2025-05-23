@@ -168,6 +168,8 @@ Build-Depends:
 	linux-image-6.12.29-amd64 [amd64],
 	linux-image-6.12.29-arm64 [arm64],
 #		Ship some more drm modules, without waiting on fb-modules (#1036019)
+	fonts-motoya-l-cedar,
+#		Temporary, until we confirm using this font and request a udeb (#1037256)
 
 Package: debian-installer
 Architecture: any
