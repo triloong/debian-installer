@@ -626,6 +626,15 @@ endif
 		zcat $(TREE)/usr/share/localechooser/languagelist.data.gz >> $(TEMP)/all.utf; \
 	fi
 
+	# HACK alert (#1037256): manually deploy an extra font for Japanese,
+	# temporarily using the deb via Build-Depends until we confirm this is
+	# what we want to be using long-term and request a udeb for it.
+	if [ -e "$(TREE)/etc/fonts" ]; then \
+		mkdir -p $(TREE)/usr/share/fonts/truetype/motoya-l-cedar; \
+		cp /usr/share/fonts/truetype/motoya-l-cedar/MTLc3m.ttf    \
+		   $(TREE)/usr/share/fonts/truetype/motoya-l-cedar;       \
+	fi
+
 	# Run fc-cache if needed, to avoid having to generate UUIDs
 	# at runtime, which can be hard because of missing entropy
 	# (#898468). Beware, fc-cache insists on having a directory
