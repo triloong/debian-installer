@@ -1,6 +1,6 @@
 debian-installer (202505XX) UNRELEASED; urgency=medium
 
-  * Bump Linux kernel ABI to 6.12.30.
+  * Bump Linux kernel ABI to 6.12.32.
   * Bump (temporary) linux-image build-deps accordingly.
   * Add MotoyaLCedar font for proper Japanese support, with many thanks to
     Kentaro HAYASHI (#1037256):
