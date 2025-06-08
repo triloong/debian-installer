@@ -5,6 +5,10 @@ debian-installer (202505XX) UNRELEASED; urgency=medium
   * Add MotoyaLCedar font for proper Japanese support, with many thanks to
     Kentaro HAYASHI (#1037256):
      - Add fonts-motoya-l-cedar-udeb to gtk-common.
+  * Stop setting DPKG_UNPACK_OPTIONS = --force-overwrite, as we shouldn't
+    be needing this nominally, and it tends to hide bugs (See: #1107392).
+    With thanks to Jörn Heissler for the bug report and Michael Tokarev
+    for the quick fix on the busybox-udeb side.
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 19 May 2025 01:54:15 +0200
 
