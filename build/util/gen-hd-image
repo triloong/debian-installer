@@ -55,6 +55,8 @@
 
 set -e
 
+PROGNAME=${0##*/}
+
 PATH="${PATH}:/bin:/sbin:/usr/bin:/usr/sbin"
 export PATH
 
@@ -75,13 +77,13 @@ PREREQUISITES_MISSING=""
 log()
 {
   if [ "${VERBOSITY}" -gt 0 ]; then
-    echo "$(basename $0): $1"
+    echo "$PROGNAME: $1"
   fi
 }
 
 error()
 {
-  echo "$(basename $0): $1" 1>&2
+  echo "$PROGNAME: $1" 1>&2
 }
 
 clean_tempfiles()
@@ -112,15 +114,15 @@ usage()
 {
   fmt -w 75 -s <<EOF
 
-$(basename $0) - bootable harddisk image generator
+$PROGNAME - bootable harddisk image generator
 
 SYNOPSIS:
 
-$(basename $0) -o output_image_name [-s image_size] [-i sourcedir] [-t fstype] [-d partid] [-p partition_offset] [-b build_type] [-z|-j|-J] [-h] [[bootloader_image bootloader_offset] ...]
+$PROGNAME -o output_image_name [-s image_size] [-i sourcedir] [-t fstype] [-d partid] [-p partition_offset] [-b build_type] [-z|-j|-J] [-h] [[bootloader_image bootloader_offset] ...]
 
 DESCRIPTION:
 
-$(basename $0) generates harddisk images with a partition table and a
+$PROGNAME generates harddisk images with a partition table and a
 single primary partition from a directory tree without requiring root
 privileges.  It optionally also installs firmware/bootloader
 binaries (usually u-boot) in the image area between the MBR and the
@@ -248,7 +250,7 @@ while getopts "hi:o:s:t:d:p:b:zjJv" option; do
           PARTID="0x83"
           ;;
         *)
-          echo "$(basename $0): Invalid filesystem type \"${FSTYPE}\". Use fat16, fat32 or ext2."
+          error "ERROR: Invalid filesystem type \"${FSTYPE}\". Use fat16, fat32 or ext2."
           exit 1
           ;;
       esac
@@ -265,7 +267,7 @@ while getopts "hi:o:s:t:d:p:b:zjJv" option; do
         complete|firmware|partition)
           ;;
         *)
-          echo "$(basename $0): Invalid build type \"${BUILDTYPE}\". Use complete, firmware or partition."
+          error "ERROR: Invalid build type \"${BUILDTYPE}\". Use complete, firmware or partition."
           exit 1
           ;;
       esac
