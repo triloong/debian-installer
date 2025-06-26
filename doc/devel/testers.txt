@@ -3,7 +3,7 @@ PORTS
 
 Alpha:
   David Pashley <david@davidpashley.com>
-  Steve Langasek <vorlon@debian.org>
+  Steve Langasek (RIP)
   maximilian attems <debian@sternwelten.at>
 
 ARM:
@@ -21,7 +21,7 @@ MIPS (big-endian):
         SGI Indigo2, R4K IP22, 384 MB RAM
     Bernhard R. Link <blink@informatik.uni-freiburg.de>
     Martin Michlmayr <tbm@cyrius.com>
-    Thiemo Seufer <ica2_ts@csv.ica.uni-stuttgart.de>
+    Thiemo Seufer (RIP)
     Karsten Merker <karsten@excalibur.cologne.de>
   r5k-ip22 (SGI Indy):
     Peter 'p2' De Schrijver <p2@mind.be>
@@ -63,7 +63,7 @@ INSTALLATION METHODS
 ====================
 
 i386: 100MB CD, Businesscard CD, Floppy/Net, Floppy/CD, PXE/Netboot
-  Frans Pop <aragorn@tiscali.nl>
+  Frans Pop (RIP)
   Margarita Manterola <debian@marga.com.ar>
 
 i386: PXE/Netboot only
@@ -97,7 +97,7 @@ TRANSLATIONS
 ============
 
 NL
-  Frans Pop <aragorn@tiscali.nl>
+  Frans Pop (RIP)
 
 FR
   Christian Perrier <bubulle@debian.org>
