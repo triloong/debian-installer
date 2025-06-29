@@ -68,6 +68,17 @@ export DRM_MODULES :=          \
 	ttm/ttm.ko
 endif
 
+# Sound support for Intel might be funky and require i915 bits:
+export DRIVERS_DIR := /usr/lib/modules/$(KERNELVERSION)/kernel/drivers
+ifndef SPEECH_MODULES
+export SPEECH_MODULES :=                      \
+	gpu/drm/display/drm_display_helper.ko \
+	gpu/drm/drm_buddy.ko                  \
+	gpu/drm/i915/i915.ko                  \
+	media/cec/core/cec.ko                 \
+	media/rc/rc-core.ko
+endif
+
 # Add to PATH so dpkg will always work, and so local programs will be found.
 PATH := util:$(PATH):/usr/sbin:/sbin
 EATMYDATA = $(shell which eatmydata 2>/dev/null)
@@ -469,6 +480,16 @@ ifneq (,$(filter $(ARCH),amd64 arm64 i386))
 		for module in $(DRM_MODULES); do \
 			mkdir -p $(TREE)$(DRM_DIR)/$$(dirname $$module); \
 			cp $(DRM_DIR)/$$module.xz $(TREE)$(DRM_DIR)/$$module.xz; \
+		done; \
+	fi
+endif
+
+ifneq (,$(filter $(ARCH),amd64))
+	# Sound support for Intel might be funky and require i915 bits:
+	if [ -e "$(TREE)/etc/fonts" ]; then \
+		for module in $(SPEECH_MODULES); do \
+			mkdir -p $(TREE)$(DRIVERS_DIR)/$$(dirname $$module); \
+			cp $(DRIVERS_DIR)/$$module.xz $(TREE)$(DRIVERS_DIR)/$$module.xz; \
 		done; \
 	fi
 endif
