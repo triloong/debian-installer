@@ -9,6 +9,8 @@ debian-installer (202505XX) UNRELEASED; urgency=medium
     be needing this nominally, and it tends to hide bugs (See: #1107392).
     With thanks to Jörn Heissler for the bug report and Michael Tokarev
     for the quick fix on the busybox-udeb side.
+  * Improve support for speech synthesis, embedding some i915-related
+    modules on amd64, for graphical targets.
   * Update translation-status for the release.
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 19 May 2025 01:54:15 +0200
