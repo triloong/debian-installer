@@ -1,3 +1,11 @@
+debian-installer (20250631) UNRELEASED; urgency=medium
+
+  * Remove kmod-udeb_30+20230601-2.1 from CHECK_MINIMAL_VERSION. It was
+    hidden away and now triggers problems on mips64el for reasons that
+    remain to be investigated.
+
+ -- Cyril Brulebois <kibi@debian.org>  Tue, 01 Jul 2025 12:06:55 +0200
+
 debian-installer (20250630) unstable; urgency=medium
 
   * Bump Linux kernel ABI to 6.12.33+deb13.
