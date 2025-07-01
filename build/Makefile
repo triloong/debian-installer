@@ -106,7 +106,6 @@ endef
 # via recursive make calls. ARCH is constant, we don't support
 # crosscompiling.
 ARCH = $(DEB_HOST_ARCH)
-OS = $(DEB_HOST_ARCH_OS)
 
 # By default, we just advertise what we can do.
 .PHONY: all
@@ -130,7 +129,6 @@ endef
 include config/common
 include config/dir
 -include config/$(ARCH).cfg
--include config/$(OS).cfg
 -include config/$(ARCH)/$(SUBARCH).cfg
 -include config/$(ARCH)/$(SUBARCH)/$(MEDIUM).cfg
 -include config/$(ARCH)/$(SUBARCH)/$(MEDIUM)/$(FLAVOUR).cfg
