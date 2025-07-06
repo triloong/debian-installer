@@ -1,3 +1,9 @@
+debian-installer (20250702) UNRELEASED; urgency=medium
+
+  * Bump Linux kernel ABI to 6.12.35+deb13.
+
+ -- Cyril Brulebois <kibi@debian.org>  Mon, 07 Jul 2025 01:40:45 +0200
+
 debian-installer (20250701) unstable; urgency=medium
 
   * Remove kmod-udeb_30+20230601-2.1 from CHECK_MINIMAL_VERSION. It was
