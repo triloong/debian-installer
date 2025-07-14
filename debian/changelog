@@ -1,6 +1,6 @@
 debian-installer (20250703) UNRELEASED; urgency=medium
 
-  * Bump Linux kernel ABI to 6.12.35+deb13.
+  * Bump Linux kernel ABI to 6.12.37+deb13.
   * Bump (temporary) linux-image build-deps accordingly.
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 07 Jul 2025 01:41:08 +0200
