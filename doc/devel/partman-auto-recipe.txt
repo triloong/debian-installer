@@ -53,41 +53,82 @@ the recipes into different languages.
 
 <limits>::=<minimal size>_<priority>_<maximal size>_<parted fs>
 
-<minimal size> is the minimal allowed size of the partition in
-megabytes.  It is rounded to cylinder size, so if you make <minimal
-size> to be 20 MB and the cylinder size is 12MB, then it is possible
-for the partition to be only 12MB.  These sizes may also be given as
-a percentage, which makes the size be that percentage of the system's
+These three values are in decimal megabytes (MB).  They may also be given
+as a percentage, which makes the size be that percentage of the system's
 total RAM, or (as of partman-auto 87) as a number plus a percentage
 (e.g. "2000+50%"), which makes the size be that number plus that
-percentage of the system's total RAM.
+percentage of the system's total RAM.  The RAM size taken into account
+may be capped by preseeding partman-auto/cap-ram to the desired value
+in MB (disabled by default as of partman-auto 168, used to be ~1GB).
 
-<priority> is some size usually between <minimal size> and <maximal
+<minimal size> is the minimal allowed size of the partition.  Notice that
+in some edge cases due to minimal required disk space miscalculation the
+last partition size may be less than <minimal size>.
+
+<priority> is some number usually equal to or higher than <minimal
 size>.  It determines the priority of this partition in the contest
-with the other partitions for size.  Notice that if <priority> is too
+with the other partitions for size through a relative "factor", see
+section 6 "How the actual partition sizes are computed" for details.
+If <priority> is less than or equal to <minimal size> then the
+partition size is capped to <minimal size>.  If <priority> is too
 small (relative to the priority of the other partitions) then this
-partition will have size close to <minimal size>.  That's why it is
-recommended to give small partitions a <priority> larger than their
-<maximal size>.
+partition will have a size close to <minimal size>.
 
 <maximal size> is the maximal size for the partition, i.e. a limit
 size such that there is no sense to make this partition larger.
 The special value "-1" is used to indicate unlimited partition size.
+If <maximal size> is less than or equal to <minimal size>, then the
+partition size is capped to <minimal size>.  Notice that currently,
+if no partition has unlimited size then the last partition will be
+given all remaining free space regardless of <maximum size> (see
+section 5 "Limitations").
+
+By default, the resulting size is rounded by optimal alignment for
+modern disks and SSDs (usually 1MiB), so it is possible for it to be
+slightly less than expected.
 
 <parted fs> is the file system as known to parted of this partition.
-It may be $default_filesystem to use partman's default (currently ext3).
+It may be $default_filesystem to use partman's default (currently ext4
+for linux, ext2 for hurd, ufs for kfreebsd, can be overriden by preseeding
+partman-base/default_filesystem).
 
 
 <specifiers>::=<specifier>|<specifier>_<specifiers>
 
 <specifier>::=<internal specifier>|<regular specifier>|<type specifier>
 
-<internal specifier>::=$primary{_}|$bootable{_}|$default_filesystem{_}
+<internal specifier>::=$primary{_}|$bootable{_}|$default_filesystem{_}|
+$legacy_boot{_}|$iflabel{_<disklabels>_}|$reusemethod{_}
+
+<disklabels>::=<disklabel>|<disklabel>_<disklabels>
+
+<disklabel> is a supported disk label (partition table) type: gpt, msdos...
 
 $primary{_} says that the partition should be primary (if possible).
-$bootable{_} says that the bootable flag will be set.
+
+$bootable{_} says that the bootable flag will be set (ignored on gpt).
+
 $default_filesystem{_} says that partman's default filesystem (currently
-ext3) should be used.
+ext4 for linux, ext2 for hurd, ufs for kfreebsd, can be overriden by
+preseeding partman-base/default_filesystem) should be used.
+
+$legacy_boot{_} says that the gpt legacy_boot flag will be set.
+
+$iflabel{_<disklabels>_} says that the partition will be created only
+on the specified partition table types. Multiple space-separated disk
+labels are supported as of partman-auto 170.
+
+$reusemethod{_} lets partman reuse an existing partition with the same
+method on the selected disk when "Guided - use the largest continuous
+free space" or "Automatically partition the free space" is chosen.
+The format{_} specifier will be ignored to preserve its contents.
+As of partman-auto 170, an existing partition can be reused only if its
+size is at least <minimal size>.  Unused partitions (with no method)
+cannot be reused even if they have the same type.  As of
+partman-basicfilesystems 169, existing swap partitions are not
+automatically marked with method "swap" any more, so will not be reused
+by default (on the assumption that they may be used by another system
+for hibernation and should not be shared).
 
 <regular specifier>::=<file name>{ <file contents> }
 
@@ -148,6 +189,7 @@ method{ format }
 	used to reserve for future use some disk space).
 format{ }
 	Also needed to make the partition be formatted.
+	Ignored if an existing partition is reused, see $reusemethod{_}.
 use_filesystem{ }
 	Specifies that the partition has a filesystem on it.
 filesystem{ ext3 }
@@ -251,22 +293,31 @@ the partition is not formatted.
 	$bootable{ }
 	method{ newworld } .
 
-Another example is a netwinder, which requires a small /boot partition
-formated in revision 0 ext2.
+Another example is ppc64el machines with Petitboot firmware, which
+does not support ext4 and requires a /boot partition formatted in ext2.
 
-50 500 100 ext2
+68 788 1024 ext2
 	$primary{ }
-	$bootable{ }
 	method{ format }
 	format{ }
 	use_filesystem{ }
-	filesystem{ ext2r0 }
+	filesystem{ ext2 }
 	mountpoint{ /boot } .
 
-Finally, an example of how to set up an efi boot partition on amd64.
+On x86 with legacy BIOS (or UEFI set up for legacy boot), GRUB needs a
+tiny "BIOS boot" partition if the boot disk has a gpt partition table.
+
+1 1 1 free
+	$iflabel{ gpt }
+	$reusemethod{ }
+	method{ biosgrub } .
+
+Finally, an example of how to set up an EFI system partition (ESP).
+Notice that if an existing ESP is reused then it will not be formatted
+in order to preserve its contents.
 
 538 538 1075 free
-        $iflabel{ gpt }
+        $iflabel{ gpt msdos }
         $reusemethod{ }
         method{ efi }
         format{ } .
@@ -279,9 +330,11 @@ The EFI example above was taken from partman-auto/recipe-amd64-efi/atomic.
 --------------
 
 Due to limitation of the algorithms in partman-auto, there must be at
-least one partition with high maximal size so that the whole free
+least one partition with unlimited maximal size or the sum of maximal
+sizes must be higher than the free space size so that the whole free
 space can be used.  Usually you can give the partition containing
 /home a maximal size.  -1 is used to indicate unlimited maximal size.
+Otherwise the last partition will be given all remaining free space.
 
 If the large /home is not an option for you, you can also define in the
 recipe one additional partition with size -1, method "keep" and leave it
@@ -300,6 +353,10 @@ Let free_space be the size of the free space to partition.
 Then do the following:
 
 for(i=1;i<=N;i++) {
+   if (priority[i] < min[i])
+      priority[i] = min[i];
+   if (max[i] < min[i])
+      max[i] = min[i];
    factor[i] = priority[i] - min[i];
 }
 ready = FALSE;
@@ -309,8 +366,10 @@ while (! ready) {
    ready = TRUE;
    for(i=1;i<=N;i++) {
       x = min[i] + (free_space - minsum) * factor[i] / factsum;
-      if (x > max[i])
+      if (x > max[i]) {
          x = max[i];
+         factor[i] = 0;
+      }
       if (x != min[i]) {
          ready = FALSE;
          min[i] = x;
@@ -324,12 +383,7 @@ Then min[i] will be the size of partition #i.
 7. APPENDIX
 -----------
 
-On May 25th 2004, it was noted that on i386 systems, the very minimum size of
-a Debian installation on a classical (/, /usr, /usr, /home) setup was:
-48MB on / (6MB on /boot)
-77MB on /usr
-17MB on /var
+As of 2025, on amd64 systems, the very minimum size of a Debian Trixie
+installation on a classical (/, /home) setup was:
+2GB on / (100MB on /boot)
 It is thus wise to use minimum values with this consideration in mind.
-
-#261244: 70MB are required for /var
-#265290: 1.8GB are not enough for / with desktop
