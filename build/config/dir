@@ -61,6 +61,7 @@ NETBOOT_PATH = $(NETBOOT_DI_DIR)/$(ARCH)
 
 # The files we may want to have in dest/
 INITRD = $(SOME_DEST)/$(EXTRANAME)initrd.gz
+INITRD_XZ = $(SOME_DEST)/$(EXTRANAME)initrd.xz
 KERNEL = $(foreach name,$(KERNELNAME),$(SOME_DEST)/$(EXTRANAME)$(name))
 DTBS = $(SOME_DEST)/$(EXTRANAME)README
 BOOT = $(SOME_DEST)/$(EXTRANAME)boot.img$(GZIPPED)
@@ -77,6 +78,7 @@ MISC = $(foreach name,$(MISCNAME),$(SOME_DEST)/$(EXTRANAME)$(name))
 
 # some intersting files in tmp/ we may need
 TEMP_INITRD = $(TEMP)/initrd.gz
+TEMP_INITRD_XZ = $(TEMP)/initrd.xz
 TEMP_UDEB_LIST = $(TEMP)/udeb.list
 TEMP_KERNEL = $(foreach name,$(KERNELNAME),$(TEMP)/$(name))
 TEMP_DTBS = $(TEMP)/lib

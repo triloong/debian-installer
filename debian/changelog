@@ -1,7 +1,28 @@
 debian-installer (20250703) UNRELEASED; urgency=medium
 
+  [ Cyril Brulebois ]
   * Bump Linux kernel ABI to 6.12.38+deb13.
   * Bump (temporary) linux-image build-deps accordingly.
+
+  [ Alper Nebi Yasak ]
+  * Add dependencies to depthcharge image recipes
+  * Make x86 depthcharge images configure partman to use GPT partitioning
+  * Minimize kernel partition size in depthcharge images
+  * Create a second partition in depthcharge images
+  * gen-hd-image: Set a fixed disk label ID
+  * gen-hd-image: Add support for building GPT disk images
+  * gen-hd-image: Set fixed GPT partition UUIDs
+  * gen-hd-image: Mark ChromeOS kernel partitions as bootable
+  * Use gen-hd-image to build depthcharge disk images
+  * Build hd-media images for arm64
+  * Build amd64/arm64 cdrom images for ChromeOS devices
+  * Build arm64/amd64 hd-media images for ChromeOS devices
+  * Support building board-specific depthcharge images
+  * Build arm64 cdrom depthcharge image for "gru" boards
+  * Build arm64 cdrom depthcharge image for "hana" boards
+  * Move xz-compressed initramfs targets to top-level Makefile
+  * Use xz-compressed initramfs in depthcharge images
+  * Build very small hd-media images as a 'tiny' flavour
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 07 Jul 2025 01:41:08 +0200
 

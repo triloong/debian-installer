@@ -181,6 +181,10 @@ define gzip
   pigz -nm
 endef
 
+define xz
+  xz -T0 --check=crc32
+endef
+
 # Define MKFS_JFFS2 in the config file for your target.
 # For example: MKFS_JFFS2 = mkfs.jffs2 -f -p -b -e 0x20000
 define mkjffs2
@@ -810,6 +814,9 @@ endif
 		exit 1 ;; \
 	esac
 
+$(TEMP_INITRD_XZ): $(TEMP_INITRD)
+	$(gzip) -v -d <$< | $(xz) -v -9 >$@
+
 # Create the images for dest/. Those are the targets called from config.
 
 ifeq ($(SYMLINK_INITRD),)
@@ -822,6 +829,10 @@ $(INITRD): $(realpath $(dir $(INITRD))/$(SYMLINK_INITRD))
 	ln -s $(SYMLINK_INITRD) $@
 	update-manifest $@ $(MANIFEST-INITRD) $(UDEB_LISTS)
 endif
+
+$(INITRD_XZ): $(TEMP_INITRD_XZ)
+	install -p -m 644 -D $< $@
+	update-manifest $@ $(MANIFEST-INITRD) $(UDEB_LISTS)
 
 $(RAMDISK): $(TEMP_INITRD)
 	install -p -m 644 -D $< $@
