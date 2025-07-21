@@ -182,7 +182,7 @@ define gzip
 endef
 
 define xz
-  xz -T0 --check=crc32
+  xz -T0 --check=crc32 --block-size=1M
 endef
 
 # Define MKFS_JFFS2 in the config file for your target.
@@ -815,7 +815,7 @@ endif
 	esac
 
 $(TEMP_INITRD_XZ): $(TEMP_INITRD)
-	$(gzip) -v -d <$< | $(xz) -v -9 >$@
+	$(gzip) -v -d <$< | $(xz) -v >$@
 
 # Create the images for dest/. Those are the targets called from config.
 
