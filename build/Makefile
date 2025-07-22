@@ -120,6 +120,11 @@ define genext2fs
   genext2fs -d $(TREE) -b `expr $$(du -s $(TREE) | cut -f 1) + $$(expr $$(find $(TREE) | wc -l) \* 2)` -m 0
 endef
 
+# Overridden for some depthcharge images
+define xz
+  xz -T0 --check=crc32 --block-size=1M
+endef
+
 # Configurations for the varying ARCH, SUBARCH, MEDIUM, FLAVOUR.
 # For simplicity, we use a similiar tree layout for config/, tmp/
 # and dest/.
@@ -179,10 +184,6 @@ endef
 
 define gzip
   pigz -nm
-endef
-
-define xz
-  xz -T0 --check=crc32 --block-size=1M
 endef
 
 # Define MKFS_JFFS2 in the config file for your target.
