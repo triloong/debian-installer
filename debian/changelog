@@ -37,6 +37,9 @@ debian-installer (20250515) unstable; urgency=medium
     (Closes: #1091537)
   * [arm64] Increase SD card image sizes for netboot (150MB → 300MB) and
     netboot-gtk (200MB → 400MB).
+  * [armel] Remove marvell images unbuildable due to kernel removal
+  * [i386] Remove i386 images unbuildable due to kernel removal
+  * Ensure destination directory exists before writing udeb lists
 
   [ Cyril Brulebois ]
   * Bump Linux kernel ABI to 6.12.27.

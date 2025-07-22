@@ -322,6 +322,7 @@ _rebuild:
 
 # Run before releasing built files.
 release:
+	mkdir -p $(BASE_DEST)
 	egrep '^[[:space:]]' $(BASE_DEST)/MANIFEST.udebs | \
 		sed 's/^[[:space:]]*//' | sort | uniq > $(BASE_DEST)/udeb.list
 	rm -f $(BASE_DEST)/MD5SUMS $(BASE_DEST)/SHA256SUMS
