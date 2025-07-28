@@ -3,6 +3,7 @@ debian-installer (20250703) UNRELEASED; urgency=medium
   [ Cyril Brulebois ]
   * Bump Linux kernel ABI to 6.12.38+deb13.
   * Bump (temporary) linux-image build-deps accordingly.
+  * Update translation-status for the release.
 
   [ Alper Nebi Yasak ]
   * Add dependencies to depthcharge image recipes
