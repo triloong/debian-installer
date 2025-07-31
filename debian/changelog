@@ -25,6 +25,9 @@ debian-installer (20250703) UNRELEASED; urgency=medium
   * Use xz-compressed initramfs in depthcharge images
   * Build very small hd-media images as a 'tiny' flavour
 
+  [ Samuel Thibault ]
+  * Fix fb=false parameter into nomodeset.
+
  -- Cyril Brulebois <kibi@debian.org>  Mon, 07 Jul 2025 01:41:08 +0200
 
 debian-installer (20250701) unstable; urgency=medium
