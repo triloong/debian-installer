@@ -15,7 +15,7 @@ LINUX_KERNEL_ABI ?= 6.12.38+deb13
 
 # Make sure the mirror is sufficiently up-to-date, by checking minimal
 # version (list of package_version):
-CHECK_MINIMAL_VERSION ?=
+CHECK_MINIMAL_VERSION ?= hw-detect_1.171
 
 # Always "di" these days
 KERNEL_FLAVOUR ?= di
