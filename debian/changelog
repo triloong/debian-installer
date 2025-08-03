@@ -24,6 +24,8 @@ debian-installer (20250703) UNRELEASED; urgency=medium
   * Move xz-compressed initramfs targets to top-level Makefile
   * Use xz-compressed initramfs in depthcharge images
   * Build very small hd-media images as a 'tiny' flavour
+  * Use a block size of 1MiB for xz with default compression preset
+  * Use xz -9 without block size for amd64/arm64 cdrom depthcharge images
 
   [ Samuel Thibault ]
   * Fix fb=false parameter into nomodeset.
