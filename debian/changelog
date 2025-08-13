@@ -1,6 +1,14 @@
 debian-installer (20250804) UNRELEASED; urgency=medium
 
-  * Add fakeroot to Build-Depends.
+  * Add fakeroot to Build-Depends:
+     - It's used explicitly in various locations so it makes sense to have
+       in the first place.
+     - Additionally, that seems to have become needed for daily builds
+       following commit 234b6db2c041cd605ade7bb7ef9c6f77d4841726 in
+       dsa-puppet.git, with setup-dchroot only installing fakeroot for
+       bullseye, bookworm, and trixie now. In other words, it's no longer
+       installed by default in sid chroots available on porterboxes, where
+       daily builds are performed.
 
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
