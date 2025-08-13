@@ -168,6 +168,7 @@ Build-Depends:
 	linux-image-6.12.38+deb13-amd64 [amd64],
 	linux-image-6.12.38+deb13-arm64 [arm64],
 #		Ship some more drm modules, without waiting on fb-modules (#1036019)
+	fakeroot,
 
 Package: debian-installer
 Architecture: any
