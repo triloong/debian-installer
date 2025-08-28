@@ -16,6 +16,10 @@ debian-installer (20250804) UNRELEASED; urgency=medium
   [ Pascal Hambourg ]
   * Update doc/devel/partman-auto-recipe.txt. Closes: #1109467
 
+  [ Jochen Sprickerhof ]
+  * Use fakeroot instead of Rules-Requires-Root: binary-targets, this makes
+    the package not FTBFS with debrebuild and on reproduce.debian.net.
+
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
 debian-installer (20250803) unstable; urgency=medium

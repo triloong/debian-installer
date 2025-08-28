@@ -3,7 +3,6 @@ Section: devel
 Priority: optional
 Maintainer: Debian Install System Team <debian-boot@lists.debian.org>
 Uploaders: Cyril Brulebois <kibi@debian.org>
-Rules-Requires-Root: binary-targets
 Standards-Version: 4.3.0
 Vcs-Git: https://salsa.debian.org/installer-team/debian-installer.git
 Vcs-Browser: https://salsa.debian.org/installer-team/debian-installer
@@ -169,6 +168,7 @@ Build-Depends:
 	linux-image-6.17.6+deb14-arm64 [arm64],
 #		Ship some more drm modules, without waiting on fb-modules (#1036019)
 	fakeroot,
+#		For reproducible builds and build/Makefile re executes with it.
 
 Package: debian-installer
 Architecture: any
