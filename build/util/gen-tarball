@@ -30,5 +30,5 @@ fi
 # https://wiki.debian.org/ReproducibleBuilds/TimestampsInGzipHeaders
 (
 	gzip="pigz -9nm"
-	cd "$SOURCE_DIR" && find . -print0 | LC_ALL=C sort -z | tar --no-recursion --null -T - -I "$gzip" -cvf -
+	cd "$SOURCE_DIR" && find . -print0 | LC_ALL=C sort -z | tar --owner root:0 --group root:0 --no-recursion --null -T - -I "$gzip" -cvf -
 ) > "$OUTPUT_FILE"
