@@ -3,6 +3,7 @@ debian-installer (20250803+deb13u1) UNRELEASED; urgency=medium
   * Bootstrap trixie stable branch:
     - Set USE_PROPOSED_UPDATES=1 in debian/rules
     - Set USE_UDEBS_FROM?=trixie in build/config/common
+  * Bump Linux kernel ABI to 6.12.43+deb13.
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 01 Sep 2025 16:07:18 +0200
 
