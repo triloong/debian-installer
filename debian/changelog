@@ -5,6 +5,11 @@ debian-installer (20250803+deb13u1) UNRELEASED; urgency=medium
     - Set USE_UDEBS_FROM?=trixie in build/config/common
   * Bump Linux kernel ABI to 6.12.43+deb13.
   * Adjust linux-image build-deps accordingly.
+  * Add a workaround for a GRUB graphics initialisation bug (#1110759):
+    adding a simple text output before switching terminal_output to
+    gfxterm makes the graphical display work on older machines. With many
+    thanks to Fab Stz for drawing our attention to this problem and the
+    proposed workaround.
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 01 Sep 2025 16:07:18 +0200
 
