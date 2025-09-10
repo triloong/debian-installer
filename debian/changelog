@@ -1,5 +1,6 @@
 debian-installer (20250804) UNRELEASED; urgency=medium
 
+  [ Cyril Brulebois ]
   * Add fakeroot to Build-Depends:
      - It's used explicitly in various locations so it makes sense to have
        in the first place.
@@ -11,6 +12,9 @@ debian-installer (20250804) UNRELEASED; urgency=medium
        daily builds are performed.
   * Bump Linux kernel ABI to 6.16.3+deb14.
   * Adjust linux-image build-deps accordingly.
+
+  [ Pascal Hambourg ]
+  * Update doc/devel/partman-auto-recipe.txt. Closes: #1109467
 
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
