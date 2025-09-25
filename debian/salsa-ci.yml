@@ -22,57 +22,59 @@ variables:
 # only be set to `"parent_pipeline"` when triggered by a branch2repo parent
 # pipeline.
 
-.di-build-definition:
-  extends: .build-package
-  variables:
-    # gen-sources.list.udeb does not grok deb822 format (as used on salsa),
-    # so we need this to tell the build from where to get udebs:
-    MIRROR: "http://deb.debian.org/debian"
-  script:
-    - !reference [.build-package, script]
-    - export
-    - |
-      for BUILD_JOB_ISO_FULL in $WORKING_DIR/*.iso; do break; done
-      cat >> ${CI_PROJECT_DIR}/salsa.env <<-EOF
-      	BUILD_JOB_URL=$CI_JOB_URL
-      	BUILD_JOB_ISO=${BUILD_JOB_ISO_FULL#$CI_PROJECT_DIR}
-      	BUILD_JOB_DEBIAN_BUILD_ID=$(echo $BUILD_JOB_ISO|sed -nE 's%.*/debian-(.*)-gtkmini.iso%\1%p')
-      	EOF
-    - head -v ${CI_PROJECT_DIR}/salsa.env
-
-extract-source:
-  extends: .provisioning-extract-source
-  script:
-    - !reference [.provisioning-extract-source, script]
+.kludge-kernel-abi-issues-script: &kludge-kernel-abi-issues-script
     - export
     - head -v ${CI_PROJECT_DIR}/salsa.env
     - |
       set -x
       source ${CI_PROJECT_DIR}/salsa.env
-      # Make sure that we don't exceed salsa's artifact limit when building in CI
-      cat >> ${CI_PROJECT_DIR}/salsa.env <<-EOF
-      	BUILD_TARGETS=build_netboot-gtk
-      	ADDITIONAL_BUILD_PRODUCT=miniiso
-      EOF
 
       arch=$(dpkg-architecture -qDEB_HOST_ARCH)
-      cfg_abi=$(sed -ne 's/^LINUX_KERNEL_ABI\s*?=\s*\([0-9.-]*\)\s*$/\1/p' ${WORKING_DIR}/${SOURCE_DIR}/build/config/common)
+      cfg_abi=$(sed -ne 's/^LINUX_KERNEL_ABI\s*?=\s*\([0-9.-]*\)\s*$/\1/p' build/config/common)
       # use available rather than configured ABI when things are skewed (allowing salsa builds to continue working)
       avail_abi=$(apt-cache show linux-headers-${arch}/${RELEASE_FROM_CHANGELOG} | sed -ne 's/Depends: linux-headers-\([0-9.-]*\)-amd64.*$/\1/p')
       if [ "${avail_abi}" != "${cfg_abi}" ]; then
         printf "warning: Using available ABI (%s) instead of the one set in the source (%s)\n" "$avail_abi" "$cfg_abi"
-        sed -i -e "1 s/)/+ABI~${avail_abi/-/\~})/;1 a \ \n  [ Salsa-CI ]\n  * WARNING: automatically modified to use ABI = ${avail_abi}\n    This needs to be updated in the source to work for normal builds" ${WORKING_DIR}/${SOURCE_DIR}/debian/changelog
-        sed -i -E "s/^(\s*linux-image-)${cfg_abi}/\1${avail_abi}/" ${WORKING_DIR}/${SOURCE_DIR}/debian/control
+        sed -i -e "1 s/)/+ABI~${avail_abi/-/\~})/;1 a \ \n  [ Salsa-CI ]\n  * WARNING: automatically modified to use ABI = ${avail_abi}\n    This needs to be updated in the source to work for normal builds" debian/changelog
+        sed -i -E "s/^(\s*linux-image-)${cfg_abi}/\1${avail_abi}/" debian/control
         echo "LINUX_KERNEL_ABI=${avail_abi}" >> ${CI_PROJECT_DIR}/salsa.env
         # check for unsigned version of configured ABI
         if apt-cache show linux-image-${avail_abi}-${arch} | grep -q 'No packages found'; then
           printf "warning: Using unsigned kernel, as the signed kernel has not yet been released\n"
-          sed -i -e "1 s/)/+unsigned)/;/Salsa-CI/ a \  * WARNING: automatically modified to build-depend upon the unsigned kernel while we await the signed version" ${WORKING_DIR}/${SOURCE_DIR}/debian/changelog
-          sed -i -E "s/^(\s*linux-image-${avail_abi}-\S*\b)/\1-unsigned/" ${WORKING_DIR}/${SOURCE_DIR}/debian/control
+          sed -i -e "1 s/)/+unsigned)/;/Salsa-CI/ a \  * WARNING: automatically modified to build-depend upon the unsigned kernel while we await the signed version" debian/changelog
+          sed -i -E "s/^(\s*linux-image-${avail_abi}-\S*\b)/\1-unsigned/" debian/control
           echo "LINUX_KERNEL_UNSIGNED=1" >> ${CI_PROJECT_DIR}/salsa.env
         fi
       fi
     - head -v ${CI_PROJECT_DIR}/salsa.env
+
+.local-build-script: &local-build-script
+  - !reference [.build-script-setup-environment]
+  - !reference [.build-script-extract-source]
+  - !reference [.build-script-setup-build-command]
+  - *kludge-kernel-abi-issues-script
+  - !reference [.build-script-run-build-command]
+  - |
+    for BUILD_JOB_ISO_FULL in $WORKING_DIR/*.iso; do break; done
+    cat >> ${CI_PROJECT_DIR}/salsa.env <<-EOF
+    	BUILD_JOB_URL=$CI_JOB_URL
+    	BUILD_JOB_ISO=${BUILD_JOB_ISO_FULL#$CI_PROJECT_DIR}
+    	BUILD_JOB_DEBIAN_BUILD_ID=$(echo $BUILD_JOB_ISO|sed -nE 's%.*/debian-(.*)-gtkmini.iso%\1%p')
+    	EOF
+
+.di-script-build-definition: &di-script-build-definition
+  - !reference [.get-target-distribution]
+  - !reference [.build-before-script]
+  - *local-build-script
+
+.di-build-definition:
+  extends: .build-definition-common
+  variables:
+    # gen-sources.list.udeb does not grok deb822 format (as used on salsa),
+    # so we need this to tell the build from where to get udebs:
+    MIRROR: "http://deb.debian.org/debian"
+  script:
+    - *di-script-build-definition
 
 build:
   extends: .di-build-definition
@@ -112,10 +114,10 @@ mini-ISO:
         printf '%s' "$APTLY_REPO_KEY_BASE64" | base64 -d > "$keyfile"
 
         # create a sources.list.udeb.local so that the aptly repo gets used at build time.
-        # FIXME: the deb.debian.org line should probably be generated from /etc/apt/sources.list**
-        cat > $WORKING_DIR/source_dir/build/sources.list.udeb.local <<-EOF
+        # FIXME: the deb.debian.org line should probably be generated from /etc/apt/sources.list.d/*, but that would need deb822 support in D-I
+        cat > ./build/sources.list.udeb.local <<-EOF
       		# created in salsa-ci.yml:build:before_script in order to add aptly repo as an extra source
-      		deb [trusted=yes] copy:$WORKING_DIR/source_dir/build/ localudebs/
+      		deb [trusted=yes] copy:$PWD/build/ localudebs/
       		deb [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg] http://deb.debian.org/debian unstable main/debian-installer
       		deb [signed-by=$keyfile] $APTLY_REPO/debian-installer
       		EOF
@@ -134,7 +136,7 @@ mini-ISO:
       		d-i apt-setup/_DEVEL_/key string base64://$APTLY_REPO_KEY_BASE64
       		EOF
       fi
-    - !reference [.di-build-definition, script]
+    - *di-script-build-definition
 
 .openqa-link-definition:
   stage: test
@@ -147,8 +149,8 @@ mini-ISO:
     OQA_CI_PIPELINE_URL: '$CI_SERVER_URL/$CI_PROJECT_PATH/-/pipelines/$CI_PIPELINE_ID'
     # OQA_SALSA_RESULT_LINK: "$CI_API_V4_URL/projects/$CI_PROJECT_ID/statuses/$CI_COMMIT_SHA?pipeline_id=$CI_PIPELINE_ID&name=openqa&target_url=:target_url&state=:state"
     CLONE_NAME_SUFFIX: '$CI_PROJECT_NAMESPACE-$CI_COMMIT_REF_SLUG'
-    OQA_JOBSTOCLONE: $DI_OQA_JOBSTOCLONE
-    OQA_CLONE_EXTRA_ARGS: $DI_OQA_CLONE_EXTRA_ARGS
+    OQA_JOBSTOCLONE: $OQA_JOBSTOCLONE
+    OQA_CLONE_EXTRA_ARGS: $OQA_CLONE_EXTRA_ARGS
   trigger:
     project: $GITLAB_USER_LOGIN/openqa-link
 
@@ -192,7 +194,7 @@ ABI-check:
       if [ "$LINUX_KERNEL_ABI" ]; then
         cat <<-EOF
       	############################[ KERNEL SKEW ]############################
-      	LINUX_KERNEL_ABI has been set ($LINUX_KERNEL_ABI) in the extract-source job
+      	LINUX_KERNEL_ABI has been set ($LINUX_KERNEL_ABI) in the build job
       	which indicates that we had to kludge the ABI version to make the build work.
       	.
       	That being the case, this test will fail in order to indicate that
@@ -203,7 +205,7 @@ ABI-check:
       elif [ "$LINUX_KERNEL_UNSIGNED" ]; then
         cat <<-EOF
       	######################[ UNSIGNED KERNEL IN USE ]#######################
-      	The extract-source job noticed that the signed kernel is not yet available,
+      	The build job noticed that the signed kernel is not yet available,
       	so we've used the unsigned version in order to let the D-I build succeed.
       	.
       	That being the case, this test will fail in order to indicate that
@@ -215,5 +217,9 @@ ABI-check:
       echo "Normal, non-ABI-skewed build."
   variables:
     GIT_STRATEGY: none
+  allow_failure: true
   needs:
-    - job: extract-source
+    - job: build
+      optional: true
+    - job: mini-ISO
+      optional: true

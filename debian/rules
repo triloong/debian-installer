@@ -60,7 +60,8 @@ publish-tarball:
 	dpkg-distaddfile $(TARNAME) raw-installer -
 
 publish-miniiso:
-	cp ./build/tmp/netboot-gtk/mini.iso ../debian-$(VERSION)-$(ARCH)-gtkmini.iso
+	mv ./build/tmp/netboot-gtk/mini.iso ../$(MINIISONAME)
+	dpkg-distaddfile $(MINIISONAME) raw-installer -
 
 build: build-arch build-indep
 build-arch: build-stamp
