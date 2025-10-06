@@ -72,6 +72,7 @@ variables:
 .di-build-definition:
   extends: .build-definition-common
   variables:
+    SALSA_CI_SBUILD_ARGS: "--enable-network"
     # gen-sources.list.udeb does not grok deb822 format (as used on salsa),
     # so we need this to tell the build from where to get udebs:
     MIRROR: "http://deb.debian.org/debian"
