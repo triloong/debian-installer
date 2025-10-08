@@ -8,6 +8,8 @@ variables:
   SALSA_CI_DISABLE_BUILD_PACKAGE_I386: 1
   SALSA_CI_DISABLE_BLHC: 1
   SALSA_CI_DISABLE_CROSSBUILD_ARM64: 1
+  # this ensures we don't exceed salsa's artifact limit when building in CI
+  DEB_BUILD_PROFILES: pkg.debian-installer.miniiso
 
 # In the normal pipeline, we run `build` as usual, and then provide a
 # `Test with openQA` job for launching some openQA tests of the mini-ISO

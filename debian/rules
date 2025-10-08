@@ -26,9 +26,15 @@ USE_UDEBS_FROM=unstable
 USE_PROPOSED_UPDATES=0
 endif
 
-# allow these aspects of the build to be overriden (see salsa-ci.yml)
-BUILD_TARGETS ?= all_build stats release
-ADDITIONAL_BUILD_PRODUCT ?= tarball
+# check profile to see if we're trying to just build a miniiso
+ifneq ($(filter pkg.debian-installer.miniiso,$(DEB_BUILD_PROFILES)),)
+BUILD_TARGETS=build_netboot-gtk
+ADDITIONAL_BUILD_PRODUCT=miniiso
+MINIISONAME=debian-$(VERSION)-$(ARCH)-gtkmini.iso
+else
+BUILD_TARGETS=all_build stats release
+ADDITIONAL_BUILD_PRODUCT=tarball
+endif
 
 ARCHIVEDIR=debian/tmp/installer-$(ARCH)
 DESTDIR=$(ARCHIVEDIR)/$(DATE)
