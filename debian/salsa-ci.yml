@@ -32,7 +32,7 @@ variables:
       arch=$(dpkg-architecture -qDEB_HOST_ARCH)
       cfg_abi=$(sed -ne 's/^LINUX_KERNEL_ABI\s*[?]=\s*\(.*\)\s*$/\1/p' build/config/common)
       # use available rather than configured ABI when things are skewed (allowing salsa builds to continue working)
-      avail_abi=$(apt-cache show linux-headers-${arch}/${RELEASE_FROM_CHANGELOG} | sed -nE 's/Depends: linux-headers-(.*)-'"${arch}"'.*$/\1/p')
+      avail_abi=$(apt-cache show linux-headers-${arch}/${RELEASE_FROM_CHANGELOG} | sed -ne 's/Depends: linux-headers-\(.*\)-'"${arch}"'.*$/\1/p')
       if [ "${avail_abi}" != "${cfg_abi}" ]; then
         printf "warning: Using available ABI (%s) instead of the one set in the source (%s)\n" "$avail_abi" "$cfg_abi"
         sed -i -e "1 s/)/+ABI~${avail_abi/-/\~})/;1 a \ \n  [ Salsa-CI ]\n  * WARNING: automatically modified to use ABI = ${avail_abi}\n    This needs to be updated in the source to work for normal builds" debian/changelog
@@ -44,7 +44,7 @@ variables:
         if apt-cache show linux-image-${avail_abi}-${arch} | grep -q 'No packages found'; then
           printf "warning: Using unsigned kernel, as the signed kernel has not yet been released\n"
           sed -i -e "1 s/)/+unsigned)/;/Salsa-CI/ a \  * WARNING: automatically modified to build-depend upon the unsigned kernel while we await the signed version" debian/changelog
-          sed -i -E "s/^(\s*linux-image-${avail_abi}-\S*\b)/\1-unsigned/" debian/control
+          sed -i -e "s/^\(\s*linux-image-${avail_abi}-\S*\b\)/\1-unsigned/" debian/control
           echo "LINUX_KERNEL_UNSIGNED=1" >> ${CI_PROJECT_DIR}/salsa.env
         fi
       fi
