@@ -139,12 +139,15 @@ mini-ISO:
       		d-i apt-setup/_DEVEL_/key string base64://$APTLY_REPO_KEY_BASE64
       		EOF
       fi
+      # it seems we need to pass these vars via salsa.env in order to get them into the openqa-link job
+      cat >> ${CI_PROJECT_DIR}/salsa.env <<-EOF
+      	OQA_JOBSTOCLONE=${OQA_JOBSTOCLONE}
+      	OQA_CLONE_EXTRA_ARGS=${OQA_CLONE_EXTRA_ARGS}
+      	EOF
     - *di-script-build-definition
 
 .openqa-link-definition:
   stage: test
-  inherit:
-    variables: false
   variables:
     OQA_ISO_URL: '$BUILD_JOB_URL/artifacts/raw/$BUILD_JOB_ISO'
     OQA_ISO: 'salsa-$CI_PIPELINE_ID-gtk-mini.iso'
@@ -152,8 +155,6 @@ mini-ISO:
     OQA_CI_PIPELINE_URL: '$CI_SERVER_URL/$CI_PROJECT_PATH/-/pipelines/$CI_PIPELINE_ID'
     # OQA_SALSA_RESULT_LINK: "$CI_API_V4_URL/projects/$CI_PROJECT_ID/statuses/$CI_COMMIT_SHA?pipeline_id=$CI_PIPELINE_ID&name=openqa&target_url=:target_url&state=:state"
     CLONE_NAME_SUFFIX: '$CI_PROJECT_NAMESPACE-$CI_COMMIT_REF_SLUG'
-    OQA_JOBSTOCLONE: $OQA_JOBSTOCLONE
-    OQA_CLONE_EXTRA_ARGS: $OQA_CLONE_EXTRA_ARGS
   trigger:
     project: $GITLAB_USER_LOGIN/openqa-link
 
@@ -175,6 +176,9 @@ openqa-link:
     - if: $CI_PIPELINE_SOURCE != "parent_pipeline"
       when: never
     - when: on_success
+  variables:
+    OQA_JOBSTOCLONE: $OQA_JOBSTOCLONE
+    OQA_CLONE_EXTRA_ARGS: $OQA_CLONE_EXTRA_ARGS
   needs:
     - job: mini-ISO
       artifacts: true
