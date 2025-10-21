@@ -21,6 +21,12 @@ debian-installer (20250804) UNRELEASED; urgency=medium
     the package not FTBFS with debrebuild and on reproduce.debian.net.
   * build/util/gen-tarball: make tarball reproducible.
 
+  [ Simon McVittie ]
+  * artwork: Drop the version from the Ceratopsian boot screen, so d-i
+    snapshots don't identify themselves as Debian 13.
+    Similarly, remove the "11" from the Homeworld artwork for completeness.
+    Closes: #1118488
+
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
 debian-installer (20250803) unstable; urgency=medium
