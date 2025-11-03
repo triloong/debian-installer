@@ -59,7 +59,6 @@ PATH="${PATH}:/bin:/sbin:/usr/bin:/usr/sbin"
 export PATH
 
 LABELTYPE="dos"
-LABELID="0xdeb00001"
 FSTYPE="fat32"
 PARTID="0x0c"
 PARTUUID="DEB00000-0000-0000-0000-000000000002"
@@ -291,23 +290,24 @@ while getopts "hi:o:s:t:d:p:b:zjJvX:" option; do
       ;;
     X)
       LABELTYPE="${OPTARG}"
-      case "${LABELTYPE}" in
-        dos)
-          LABELID="0xdeb00001"
-          ;;
-        gpt)
-          LABELID="DEB00000-0000-0000-0000-000000000001"
-          ;;
-        *)
-          echo "$(basename $0): Invalid disk label type \"${LABELTYPE}\". Use dos or gpt."
-          exit 1
-          ;;
-      esac
       ;;
   esac
 done
 
 shift $((${OPTIND}-1))
+
+case "${LABELTYPE}" in
+  dos)
+    LABELID="0x$(printf "%08x" $((${SOURCE_DATE_EPOCH}%4294967296)))"
+    ;;
+  gpt)
+    LABELID="DEB00000-0000-0000-0000-0000$(printf "%08x" $((${SOURCE_DATE_EPOCH}%4294967296)))"
+    ;;
+  *)
+    echo "$(basename $0): Invalid disk label type \"${LABELTYPE}\". Use dos or gpt."
+    exit 1
+    ;;
+esac
 
 case "${FSTYPE}" in
   fat16|fat32)

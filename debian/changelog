@@ -41,6 +41,7 @@ debian-installer (20250804) UNRELEASED; urgency=medium
   * Make seagate network-console uInitrd reproducible
   * Set C.UTF-8 locale for bdftobogl calls
   * Use pseudorandom volume ID for FAT filesystems
+  * gen-hd-image: Use pseudorandom label IDs
 
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
