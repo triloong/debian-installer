@@ -193,6 +193,8 @@ reprotest:
 
 test-build-any:
   extends: .test-build-package-any
+  variables:
+    SALSA_CI_SBUILD_ARGS: "--enable-network"
   allow_failure: true
 
 ABI-check:
