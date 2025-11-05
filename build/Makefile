@@ -919,9 +919,23 @@ $(NETBOOT_TAR): $(TEMP_NETBOOT_DIR)
 	gen-tarball $(TEMP_NETBOOT_DIR) $@
 	update-manifest $@ $(MANIFEST-NETBOOT_TAR) $(UDEB_LISTS)
 
+# a directory full of files for an auxiliary partition
+$(HD_MEDIA_DIR): $(TEMP_HD_MEDIA_DIR)
+	cp -a $(TEMP_HD_MEDIA_DIR)/* $@
+	update-manifest $@ $(MANIFEST-HD_MEDIA_DIR) $(UDEB_LISTS)
+
+# a tarball for files for an auxiliary partition
+$(HD_MEDIA_TAR): $(TEMP_HD_MEDIA_DIR)
+	# Create an version info file.
+	echo 'Debian version:  $(DEBIAN_VERSION)' > $(TEMP_HD_MEDIA_DIR)/version.info
+	echo 'Installer build: $(BUILD_DATE)' >> $(TEMP_HD_MEDIA_DIR)/version.info
+	gen-tarball $(TEMP_HD_MEDIA_DIR) $@
+	update-manifest $@ $(MANIFEST-HD_MEDIA_TAR) $(UDEB_LISTS)
+
 $(TEMP_BOOT_SCREENS): arch_boot_screens
 $(TEMP_CD_INFO_DIR): arch_cd_info_dir
 $(TEMP_NETBOOT_DIR): arch_netboot_dir
+$(TEMP_HD_MEDIA_DIR): arch_hd-media_dir
 
 # disk/partition images for ChromeOS devices
 $(DEPTHCHARGE): $(TEMP_DEPTHCHARGE)
@@ -931,6 +945,28 @@ $(DEPTHCHARGE): $(TEMP_DEPTHCHARGE)
 	update-manifest $@ $(MANIFEST-DEPTHCHARGE) $(UDEB_LISTS)
 
 $(TEMP_DEPTHCHARGE): arch_depthcharge
+
+# U-Boot binaries for supported devices
+$(U_BOOT): $(TEMP_U_BOOT)
+	rm -rf $(SOME_DEST)/$(EXTRANAME)/u-boot
+	mkdir -p $(SOME_DEST)/$(EXTRANAME)/u-boot
+	cp -a $(TEMP_U_BOOT)/* $@
+	for file in $@/*; do \
+		target=$$(basename $${file%%.*}); \
+		manifest=$$(echo $(MANIFEST-U_BOOT) for "$$target"); \
+		update-manifest "$$file" "$$manifest" $(UDEB_LISTS); \
+	done
+
+$(TEMP_U_BOOT): arch_u-boot
+
+# disk/partition images for U-Boot systems
+$(U_BOOT_MEDIA): $(TEMP_U_BOOT_MEDIA)
+	rm -rf $(SOME_DEST)/$(EXTRANAME)/SD-card-images
+	mkdir -p $(SOME_DEST)/$(EXTRANAME)/SD-card-images
+	cp -a $(TEMP_U_BOOT_MEDIA)/* $@
+	update-manifest $@ $(MANIFEST-U_BOOT_MEDIA) $(UDEB_LISTS)
+
+$(TEMP_U_BOOT_MEDIA): arch_u-boot_media
 
 $(MISC): TEMP_REAL_MISC = $(shell echo ./$@ |sed 's,$(SOME_DEST)/$(EXTRANAME),,')
 $(MISC): 

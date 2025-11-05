@@ -21,6 +21,15 @@ debian-installer (20250804) UNRELEASED; urgency=medium
     the package not FTBFS with debrebuild and on reproduce.debian.net.
   * build/util/gen-tarball: make tarball reproducible.
 
+  [ Alper Nebi Yasak ]
+  * Refactor U-Boot binaries into arch-level recipes
+  * Use arch-specific U-Boot recipes for concatenable images
+  * Merge OLPC_XO hd-image U-Boot recipe into armhf U-Boot recipe
+  * Refactor arm hd-media recipes into new Makefile targets
+  * Refactor arm netboot sdcard images to use hd-media Makefile targets
+  * Refactor armhf netboot tarball recipes to use Makefile targets
+  * Refactor concatenable U-Boot disk images into a Makefile target
+
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
 debian-installer (20250803) unstable; urgency=medium
