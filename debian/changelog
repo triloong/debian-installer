@@ -1,3 +1,9 @@
+debian-installer (20250803+deb13u2) UNRELEASED; urgency=medium
+
+  * Bump Linux kernel ABI to 6.12.57+deb13.
+
+ -- Cyril Brulebois <kibi@debian.org>  Tue, 11 Nov 2025 22:22:56 +0100
+
 debian-installer (20250803+deb13u1) trixie; urgency=medium
 
   * Bootstrap trixie stable branch:
