@@ -142,7 +142,8 @@ mini-ISO:
       # it seems we need to pass these vars via salsa.env in order to get them into the openqa-link job
       cat >> ${CI_PROJECT_DIR}/salsa.env <<-EOF
       	OQA_JOBSTOCLONE=${OQA_JOBSTOCLONE}
-      	OQA_CLONE_EXTRA_ARGS=${OQA_CLONE_EXTRA_ARGS}
+      	OQA_CLONE_EXTRA_ARGS="${OQA_CLONE_EXTRA_ARGS}"
+      	OQA_CLONE_GRUBADD="${OQA_CLONE_GRUBADD}"
       	EOF
     - *di-script-build-definition
 
@@ -179,6 +180,7 @@ openqa-link:
   variables:
     OQA_JOBSTOCLONE: $OQA_JOBSTOCLONE
     OQA_CLONE_EXTRA_ARGS: $OQA_CLONE_EXTRA_ARGS
+    OQA_CLONE_GRUBADD: $OQA_CLONE_GRUBADD
   needs:
     - job: mini-ISO
       artifacts: true
