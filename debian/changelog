@@ -27,6 +27,9 @@ debian-installer (20250804) UNRELEASED; urgency=medium
     Similarly, remove the "11" from the Homeworld artwork for completeness.
     Closes: #1118488
 
+  [ John Paul Adrian Glaubitz ]
+  * loong64: Add configuration for cdrom-based gtk installer
+
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
 debian-installer (20250803) unstable; urgency=medium
