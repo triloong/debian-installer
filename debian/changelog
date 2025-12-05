@@ -29,6 +29,7 @@ debian-installer (20250804) UNRELEASED; urgency=medium
 
   [ John Paul Adrian Glaubitz ]
   * loong64: Add configuration for cdrom-based gtk installer
+  * loong64: Add pkg-list for cdrom-based gtk installer
 
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
