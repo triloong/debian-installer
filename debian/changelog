@@ -1,6 +1,9 @@
 debian-installer (20250803+deb13u2+~loong64+1) UNRELEASED-trixie; urgency=medium
 
   * Build for loong64 trixie.
+  
+  [ John Paul Adrian Glaubitz ]
+  * loong64: Add configuration for cdrom-based gtk installer
 
  -- Miao Wang <shankerwangmiao@gmail.com>  Mon, 22 Dec 2025 18:07:26 +0800
 
