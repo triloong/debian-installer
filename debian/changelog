@@ -10,7 +10,7 @@ debian-installer (20250804) UNRELEASED; urgency=medium
        bullseye, bookworm, and trixie now. In other words, it's no longer
        installed by default in sid chroots available on porterboxes, where
        daily builds are performed.
-  * Bump Linux kernel ABI to 6.17.11+deb14.
+  * Bump Linux kernel ABI to 6.17.12+deb14.
   * Adjust linux-image build-deps accordingly.
 
   [ Pascal Hambourg ]
