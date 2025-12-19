@@ -31,6 +31,7 @@ ifneq ($(filter pkg.debian-installer.miniiso,$(DEB_BUILD_PROFILES)),)
 BUILD_TARGETS=build_netboot-gtk
 ADDITIONAL_BUILD_PRODUCT=miniiso
 MINIISONAME=debian-$(VERSION)-$(ARCH)-gtkmini.iso
+PRESEED=$(CURDIR)/build/tmp/devel_repo_preseed.cfg
 else
 BUILD_TARGETS=all_build stats release
 ADDITIONAL_BUILD_PRODUCT=tarball
@@ -84,6 +85,15 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
+
+	# $(PRESEED) is only defined in the pkg.debian-installer.miniiso profile
+	# 
+	# This creates the sources.list file including a salsa-CI aptly repo and
+	# also adds a preseed file to the miniISO that enables the target to access
+	# that repo after the first reboot.
+	[ -z "$(PRESEED)" ] || ./build/util/create_aptly_udeb_local "$(PRESEED)"
+	# It would be better to teach gen-sources.list.udeb to deal with an extra
+	# repo that would be passed into the build via sbuild's --extra-repository
 
 	debian/rules build-images
 

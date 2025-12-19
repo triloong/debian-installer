@@ -46,6 +46,8 @@ Build-Depends:
 #		count on it remaining so.
 	genisoimage [!s390 !s390x],
 #		For making mini isos.
+    ca-certificates <pkg.debian-installer.miniiso>,
+#       when salsa-CI builds mini-ISOs, we need to verify salsa's cert.
 	genromfs [sparc sparc64],
 #		Used for creating sparc floppies (which are not built by
 #		default.)

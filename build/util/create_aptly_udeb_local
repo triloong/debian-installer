@@ -1,0 +1,33 @@
+#!/bin/sh
+
+preseed=$1
+
+if [ "$APTLY_REPO" ]; then
+  # decode & save the repo's base64-encoded key
+  keyfile=$PWD/build/salsaCI_aptly_tmp_key.gpg
+  printf '%s' "$APTLY_REPO_KEY_BASE64" | base64 -d > "$keyfile"
+
+  # create a sources.list.udeb.local so that the aptly repo gets used at build time.
+  # FIXME: the deb.debian.org line should probably be generated from /etc/apt/sources.list.d/*, but that would need deb822 support in D-I
+  cat > ./build/sources.list.udeb.local <<-EOF
+	# created in salsa-ci.yml:build:before_script in order to add aptly repo as an extra source
+	deb [trusted=yes] copy:$PWD/build/ localudebs/
+	deb [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg] http://deb.debian.org/debian unstable main/debian-installer
+	deb [signed-by=$keyfile] $APTLY_REPO/debian-installer
+	EOF
+
+  # I'm not sure if we want to put this repo into the salsa-CI job's sources or not
+  # I guess one might want to test that a new version works here too?
+  # If gen-sources.list.udeb learns about signed-by,
+  # doing the following might also be a cleaner option than the above .local:
+  #echo "deb [signed-by=$keyfile] $APTLY_REPO" > /etc/apt/sources.list.d/salsaCI_aptly_tmp_repo.list
+
+  # also create a preseed file that will enable the use of the aptly repo in the created mini-ISO
+  mkdir -p "$(dirname "$preseed")"
+  cat > "$preseed" <<-EOF
+	d-i auto-install/cloak_initrd_preseed boolean true
+	d-i apt-setup/_DEVEL_/comment string NOT FOR PRODUCTION USE! (preseed: apt-setup/_DEVEL_/...)
+	d-i apt-setup/_DEVEL_/repository string $APTLY_REPO
+	d-i apt-setup/_DEVEL_/key string base64://$APTLY_REPO_KEY_BASE64
+	EOF
+fi
