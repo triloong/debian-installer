@@ -31,7 +31,9 @@ ifneq ($(filter pkg.debian-installer.miniiso,$(DEB_BUILD_PROFILES)),)
 BUILD_TARGETS=build_netboot-gtk
 ADDITIONAL_BUILD_PRODUCT=miniiso
 MINIISONAME=debian-$(VERSION)-$(ARCH)-gtkmini.iso
+ifdef APTLY_REPO
 PRESEED=$(CURDIR)/build/tmp/devel_repo_preseed.cfg
+endif
 else
 BUILD_TARGETS=all_build stats release
 ADDITIONAL_BUILD_PRODUCT=tarball
