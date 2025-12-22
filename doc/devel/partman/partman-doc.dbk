@@ -1484,7 +1484,7 @@ Synopsis:
 <screen>
 cd <replaceable>device_directory</replaceable>
 open_dialog SET_FLAGS <replaceable>partition_id</replaceable>
-for flag in $all_flags_that_should_be_active; do
+for flag in <replaceable>all_flags_that_should_be_active</replaceable>; do
     write_line $flag
 done
 write_line NO_MORE
@@ -1511,7 +1511,7 @@ new_flags=$(
 ) 
 close_dialog
 
-open_dialog SET_FLAGS $id
+open_dialog SET_FLAGS <replaceable>partition_id</replaceable>
 write_line "$new_flags"
 write_line NO_MORE
 close_dialog
@@ -1647,7 +1647,7 @@ Synopsis:
 </para>
 <screen>
 cd <replaceable>device_directory</replaceable>
-open_dialog NEW_PARTITION $type $fs $freespace $position $length
+open_dialog NEW_PARTITION <replaceable>type fs freespace position length</replaceable>
 read_line num id size type fs path name
 close_dialog
 if [ "$id" ]; then
@@ -1657,19 +1657,23 @@ else
 fi
 </screen>
 <para>
-$type is either primary or logical.  $fs is the type of the file system to be
-assigned to the partition.  $freespace is the id of some free space.  $position
-is either `full', `beginning' or `end' and determines where in $freespace to
-create the new partition.  If $position is not `full' then $length is the
-length that the new partition should have (in bytes).
+<replaceable>type</replaceable> is either primary or logical.
+<replaceable>fs</replaceable> is the type of the file system to be assigned to
+the partition.  <replaceable>freespace</replaceable> is the id of some free
+space.  <replaceable>position</replaceable> is either `full', `beginning' or
+`end' and determines where in <replaceable>freespace</replaceable> to create
+the new partition.  If <replaceable>position</replaceable> is not `full' then
+<replaceable>length</replaceable> is the length that the new partition should
+have (in bytes).
 </para>
 <para>
-If the new file system is successfully created $num is tne number of the
-created partition (for example <filename>/dev/hda6</filename> has number 6).
+If the new file system is successfully created $num is the number of the
+created partition (for example <filename>/dev/sda6</filename> has number 6).
 $id is the id of the new partition.  $size is the size of the new partition.
-$size is approximately $length but not necessarily the same.  $type and $fs
-don't change their values.  $path is a device name, for example
-<filename>/dev/ide/host0/bus0/target0/lun0/part6</filename>.  $name is the name
+$size is approximately <replaceable>length</replaceable> but not necessarily
+the same.  $type and $fs are the same as <replaceable>type</replaceable> and
+<replaceable>fs</replaceable>.  $path is a device name, for example
+<filename>/dev/sda6</filename>.  $name is the name
 of the new partition or an empty string if the partition table doesn't support
 partition names.
 </para>
