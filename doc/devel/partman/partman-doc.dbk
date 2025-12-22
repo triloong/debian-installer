@@ -543,7 +543,7 @@ presented in the main partitioning menu.
 The directory <filename>/lib/partman/visual.d</filename> contains scripts that
 print the parts of the partition line.  For example the script
 <filename>/lib/partman/visual.d/filesystem</filename> prints strings like
-`ext3' or `FREE SPACE'.  These scripts usualy start with the following cliche:
+`ext3' or `FREE SPACE'.  These scripts usually start with the following cliche:
 </para>
 <screen>
 cd $1
@@ -652,7 +652,7 @@ use the existing data'.  Example methods that are not used together with a file
 system are `LVM physical volume' and `PALO boot partition'.
 </para>
 <para>
-Finaly, the scripts <command>do_option</command> of the menu directory
+Finally, the scripts <command>do_option</command> of the menu directory
 <command>choose_method</command> have to create or remove a file named `format'
 in the directory of the partitions.  If the partition directory contains a file
 named <command>format</command> then it will be formatted.  Otherwise it will
@@ -1202,7 +1202,7 @@ close_dialog
 <para>
 After this command <command>parted_server</command> will know that the
 partition table in its onw internal data structures is the same as the
-partition table actualy existing on the device.  The main purpose of this
+partition table actually existing on the device.  The main purpose of this
 command is to be used for partition tables with type <literal>loop</literal>.
 </para>
 </section>
@@ -1698,7 +1698,7 @@ read_line new_id
 close_dialog
 </screen>
 <para>
-This command resizes a partition.  As usualy
+This command resizes a partition.  As usually
 <replaceable><literal>new_size</literal></replaceable> is measured in bytes.
 $new_id is the new id that the partition receives.  The resizing is not
 supported always.  If it fails $new_id will be the same as
