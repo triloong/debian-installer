@@ -1491,6 +1491,11 @@ write_line NO_MORE
 close_dialog
 </screen>
 <para>
+All flags not listed will be unset. If conflicting flags are listed, only the
+one with the highest priority will be set. If you want to change the state of
+a single flag you should use the command SET_FLAG instead.
+</para>
+<para>
 If you want to denote some partition as non-bootable you can use the following
 code:
 </para>
@@ -1732,6 +1737,34 @@ This command returns the minimal and the maximal size that can be achieved by
 using the command RESIZE_PARTITION.  $minimal_size, $current_size and
 $maximal_size are measured in bytes.
 </para>
+</section>
+
+<section id="s5.29"><title>Set/unset a flag of a partition</title>
+<para>
+Synopsis:
+</para>
+<screen>
+cd <replaceable>device_directory</replaceable>
+open_dialog SET_FLAG <replaceable>partition_id</replaceable> <replaceable>flag</replaceable> <replaceable>state</replaceable>
+close_dialog
+</screen>
+<para>
+This command changes the state of a single flag of a partition.  It is
+available since partman-base 239.
+<replaceable>flag</replaceable> may be any partition flag name.
+<replaceable>state</replaceable> may be `on' or `off'.  The partition table is
+not marked as changed if the flag is unknown, invalid for the partition or
+already in the desired state.
+</para>
+<para>
+If you want to denote some partition as non-bootable you can use the following
+code:
+</para>
+<screen>
+cd <replaceable>device_directory</replaceable>
+open_dialog SET_FLAG <replaceable>partition_id</replaceable> boot off
+close_dialog
+</screen>
 </section>
 
 </chapter>
