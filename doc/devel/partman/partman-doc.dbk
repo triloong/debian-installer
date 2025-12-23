@@ -543,7 +543,7 @@ presented in the main partitioning menu.
 The directory <filename>/lib/partman/visual.d</filename> contains scripts that
 print the parts of the partition line.  For example the script
 <filename>/lib/partman/visual.d/filesystem</filename> prints strings like
-`ext3' or `FREE SPACE'.  These scripts usualy start with the following cliche:
+`ext3' or `FREE SPACE'.  These scripts usually start with the following cliche:
 </para>
 <screen>
 cd $1
@@ -652,7 +652,7 @@ use the existing data'.  Example methods that are not used together with a file
 system are `LVM physical volume' and `PALO boot partition'.
 </para>
 <para>
-Finaly, the scripts <command>do_option</command> of the menu directory
+Finally, the scripts <command>do_option</command> of the menu directory
 <command>choose_method</command> have to create or remove a file named `format'
 in the directory of the partitions.  If the partition directory contains a file
 named <command>format</command> then it will be formatted.  Otherwise it will
@@ -1202,7 +1202,7 @@ close_dialog
 <para>
 After this command <command>parted_server</command> will know that the
 partition table in its onw internal data structures is the same as the
-partition table actualy existing on the device.  The main purpose of this
+partition table actually existing on the device.  The main purpose of this
 command is to be used for partition tables with type <literal>loop</literal>.
 </para>
 </section>
@@ -1484,12 +1484,17 @@ Synopsis:
 <screen>
 cd <replaceable>device_directory</replaceable>
 open_dialog SET_FLAGS <replaceable>partition_id</replaceable>
-for flag in $all_flags_that_should_be_active; do
+for flag in <replaceable>all_flags_that_should_be_active</replaceable>; do
     write_line $flag
 done
 write_line NO_MORE
 close_dialog
 </screen>
+<para>
+All flags not listed will be unset. If conflicting flags are listed, only the
+one with the highest priority will be set. If you want to change the state of
+a single flag you should use the command SET_FLAG instead.
+</para>
 <para>
 If you want to denote some partition as non-bootable you can use the following
 code:
@@ -1506,7 +1511,7 @@ new_flags=$(
 ) 
 close_dialog
 
-open_dialog SET_FLAGS $id
+open_dialog SET_FLAGS <replaceable>partition_id</replaceable>
 write_line "$new_flags"
 write_line NO_MORE
 close_dialog
@@ -1642,7 +1647,7 @@ Synopsis:
 </para>
 <screen>
 cd <replaceable>device_directory</replaceable>
-open_dialog NEW_PARTITION $type $fs $freespace $position $length
+open_dialog NEW_PARTITION <replaceable>type fs freespace position length</replaceable>
 read_line num id size type fs path name
 close_dialog
 if [ "$id" ]; then
@@ -1652,19 +1657,23 @@ else
 fi
 </screen>
 <para>
-$type is either primary or logical.  $fs is the type of the file system to be
-assigned to the partition.  $freespace is the id of some free space.  $position
-is either `full', `beginning' or `end' and determines where in $freespace to
-create the new partition.  If $position is not `full' then $length is the
-length that the new partition should have (in bytes).
+<replaceable>type</replaceable> is either primary or logical.
+<replaceable>fs</replaceable> is the type of the file system to be assigned to
+the partition.  <replaceable>freespace</replaceable> is the id of some free
+space.  <replaceable>position</replaceable> is either `full', `beginning' or
+`end' and determines where in <replaceable>freespace</replaceable> to create
+the new partition.  If <replaceable>position</replaceable> is not `full' then
+<replaceable>length</replaceable> is the length that the new partition should
+have (in bytes).
 </para>
 <para>
-If the new file system is successfully created $num is tne number of the
-created partition (for example <filename>/dev/hda6</filename> has number 6).
+If the new file system is successfully created $num is the number of the
+created partition (for example <filename>/dev/sda6</filename> has number 6).
 $id is the id of the new partition.  $size is the size of the new partition.
-$size is approximately $length but not necessarily the same.  $type and $fs
-don't change their values.  $path is a device name, for example
-<filename>/dev/ide/host0/bus0/target0/lun0/part6</filename>.  $name is the name
+$size is approximately <replaceable>length</replaceable> but not necessarily
+the same.  $type and $fs are the same as <replaceable>type</replaceable> and
+<replaceable>fs</replaceable>.  $path is a device name, for example
+<filename>/dev/sda6</filename>.  $name is the name
 of the new partition or an empty string if the partition table doesn't support
 partition names.
 </para>
@@ -1693,7 +1702,7 @@ read_line new_id
 close_dialog
 </screen>
 <para>
-This command resizes a partition.  As usualy
+This command resizes a partition.  As usually
 <replaceable><literal>new_size</literal></replaceable> is measured in bytes.
 $new_id is the new id that the partition receives.  The resizing is not
 supported always.  If it fails $new_id will be the same as
@@ -1732,6 +1741,34 @@ This command returns the minimal and the maximal size that can be achieved by
 using the command RESIZE_PARTITION.  $minimal_size, $current_size and
 $maximal_size are measured in bytes.
 </para>
+</section>
+
+<section id="s5.29"><title>Set/unset a flag of a partition</title>
+<para>
+Synopsis:
+</para>
+<screen>
+cd <replaceable>device_directory</replaceable>
+open_dialog SET_FLAG <replaceable>partition_id</replaceable> <replaceable>flag</replaceable> <replaceable>state</replaceable>
+close_dialog
+</screen>
+<para>
+This command changes the state of a single flag of a partition.  It is
+available since partman-base 239.
+<replaceable>flag</replaceable> may be any partition flag name.
+<replaceable>state</replaceable> may be `on' or `off'.  The partition table is
+not marked as changed if the flag is unknown, invalid for the partition or
+already in the desired state.
+</para>
+<para>
+If you want to denote some partition as non-bootable you can use the following
+code:
+</para>
+<screen>
+cd <replaceable>device_directory</replaceable>
+open_dialog SET_FLAG <replaceable>partition_id</replaceable> boot off
+close_dialog
+</screen>
 </section>
 
 </chapter>
