@@ -96,6 +96,7 @@ APT::Install-Recommends "false";
 Apt::Architecture "$DEB_HOST_ARCH";
 Apt::Architectures "$DEB_HOST_ARCH";
 Dir::Etc::trusted "$KEYRING";
+Dir::Etc::trustedparts "/etc/apt/trusted.gpg.d";
 Dir::State::Status "$PWD/$APTDIR/state/status";
 Acquire::Languages "none";
 EOF
