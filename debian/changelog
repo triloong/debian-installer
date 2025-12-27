@@ -1,3 +1,9 @@
+debian-installer (20230607+deb12u13) UNRELEASED; urgency=medium
+
+  * Bump Linux kernel ABI to 6.1.0-41.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sat, 27 Dec 2025 10:19:18 +0100
+
 debian-installer (20230607+deb12u12) bookworm; urgency=medium
 
   [ Pascal Hambourg ]
