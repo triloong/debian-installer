@@ -1,4 +1,4 @@
-debian-installer (20250803+deb13u2+~loong64+1) UNRELEASED-trixie; urgency=medium
+debian-installer (20250803+deb13u2+~loong64+1~pre1) trixie; urgency=medium
 
   * Build for loong64 trixie.
   * loong64: fix GRAPHICAL_INSTALLER.
