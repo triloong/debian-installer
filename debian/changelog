@@ -1,3 +1,9 @@
+debian-installer (20250803+deb13u2+~loong64+1) trixie; urgency=medium
+
+  * Rebuild to release.
+
+ -- Miao Wang <shankerwangmiao@gmail.com>  Wed, 31 Dec 2025 03:19:34 +0800
+
 debian-installer (20250803+deb13u2+~loong64+1~pre1) trixie; urgency=medium
 
   * Build for loong64 trixie.
