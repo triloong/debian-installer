@@ -1,3 +1,10 @@
+debian-installer (20250803+deb13u3) trixie; urgency=medium
+
+  * Bump Linux kernel ABI to 6.12.63+deb13.
+  * Adjust linux-image build-deps accordingly.
+
+ -- Cyril Brulebois <kibi@debian.org>  Mon, 05 Jan 2026 14:38:15 +0100
+
 debian-installer (20250803+deb13u2) trixie; urgency=medium
 
   * Bump Linux kernel ABI to 6.12.57+deb13.
