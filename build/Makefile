@@ -530,6 +530,10 @@ endif
 		if [ -d $(TREE)/usr/lib/linux-image-$(VERSION) ]; then \
 			mv $(TREE)/usr/lib/linux-image-$(VERSION) \
 				$(TEMP)/lib; \
+		fi; \
+		if [ -d $(TREE)/usr/lib/modules/$(VERSION)/dtb ]; then \
+			mv $(TREE)/usr/lib/modules/$(VERSION)/dtb \
+				$(TEMP)/lib; \
 		fi;)
 endif
 endif
