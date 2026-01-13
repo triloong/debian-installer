@@ -35,7 +35,7 @@ variables:
       arch=$(dpkg-architecture -qDEB_HOST_ARCH)
       cfg_abi=$(sed -ne 's/^LINUX_KERNEL_ABI\s*[?]=\s*\(.*\)\s*$/\1/p' build/config/common)
       # use available rather than configured ABI when things are skewed (allowing salsa builds to continue working)
-      avail_abi=$(apt-cache show linux-headers-${arch}/${RELEASE_FROM_CHANGELOG} | sed -ne 's/Depends: linux-headers-\(.*\)-'"${arch}"'.*$/\1/p')
+      avail_abi=$(apt-cache show linux-headers-${arch}/${RELEASE_FROM_CHANGELOG} | sed -ne 's/Depends:\( [^,]*,\)* linux-headers-\(.*\)-'"${arch}"'.*$/\2/p')
       if [ "${avail_abi}" != "${cfg_abi}" ]; then
         printf "warning: Using available ABI (%s) instead of the one set in the source (%s)\n" "$avail_abi" "$cfg_abi"
         sed -i -e "1 s/)/+ABI~${avail_abi/-/\~})/;1 a \ \n  [ Salsa-CI ]\n  * WARNING: automatically modified to use ABI = ${avail_abi}\n    This needs to be updated in the source to work for normal builds" debian/changelog
