@@ -31,6 +31,7 @@ debian-installer (20250804) UNRELEASED; urgency=medium
   * loong64: Add configuration for cdrom-based gtk installer
   * loong64: Add pkg-list for cdrom-based gtk installer
   * loong64: Remove DEBIAN_RELEASE override for Debian Ports
+  * loong64: Remove KEYRING override for Debian Ports
 
   [ Alper Nebi Yasak ]
   * Clamp mtimes of files included in mini.iso images
