@@ -19,7 +19,7 @@ BOOTMENU_BEEP=y
 endif
 
 # Adjust for non-released ports if needed:
-RELEASE_ARCHES=amd64 arm64 armel armhf i386 mips mips64el mipsel ppc64el riscv64 s390x
+RELEASE_ARCHES=amd64 arm64 armel armhf i386 loong64 mips mips64el mipsel ppc64el riscv64 s390x
 ifeq (,$(filter $(ARCH), $(RELEASE_ARCHES)))
 USE_UNRELEASED=1
 USE_UDEBS_FROM=unstable
