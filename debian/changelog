@@ -52,6 +52,9 @@ debian-installer (20250804) UNRELEASED; urgency=medium
   * gen-hd-image: Use pseudorandom label IDs
   * Add debian-installer-images tarball to CI reprotest artifacts
 
+  [ Colin Watson ]
+  * Remove several obsolete programs from build/util/.
+
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
 debian-installer (20250803) unstable; urgency=medium
