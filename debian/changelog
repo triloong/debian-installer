@@ -37,6 +37,7 @@ debian-installer (20250804) UNRELEASED; urgency=medium
   * loong64: Add loong64 to the list of RELEASE_ARCHES
   * loong64: Add netboot flavour using a mini.iso
   * loong64: Remove debian-ports-archive-keyring from Build-Depends
+  * riscv64: Remove debian-ports-archive-keyring from Build-Depends
 
   [ Alper Nebi Yasak ]
   * Clamp mtimes of files included in mini.iso images
