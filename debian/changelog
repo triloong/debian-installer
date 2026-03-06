@@ -12,6 +12,8 @@ debian-installer (20250804) UNRELEASED; urgency=medium
        daily builds are performed.
   * Bump Linux kernel ABI to 6.19.6+deb14.
   * Adjust linux-image build-deps accordingly.
+  * Switch kernel udeb from kernel-image-* to linux-binary-*, matching
+    changes on the kernel side.
 
   [ Pascal Hambourg ]
   * Update doc/devel/partman-auto-recipe.txt. Closes: #1109467
