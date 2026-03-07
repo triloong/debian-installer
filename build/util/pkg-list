@@ -9,10 +9,11 @@ use warnings;
 use strict;
 
 if (int(@ARGV) < 5) {
-	die "Usage: $0 type DRIVER_FOR KERNEL_FLAVOUR KERNELMAJOR SUB_ARCH KERNEL_VERSION [KERNEL_VERSION ...]\n";
+	die "Usage: $0 type DRIVER_FOR KERNEL_NAME KERNEL_FLAVOUR KERNELMAJOR SUB_ARCH KERNEL_VERSION [KERNEL_VERSION ...]\n";
 }
 my $type=shift;
 my $driver_for=shift;
+my $kernel_name=shift;
 my $kernel_flavour=shift;
 my $kernel_major=shift;
 my $sub_arch=shift;
@@ -233,6 +234,8 @@ sub getlists {
 				# comments
 				s/^#.*//;
 				next unless length;
+
+				s/\$\{kernel:Name\}/$kernel_name/g;
 				
 				# normal kernel version substitution
 				if (/\$\{kernel:Version\}/) {
