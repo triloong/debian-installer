@@ -58,6 +58,11 @@ debian-installer (20250804) UNRELEASED; urgency=medium
   [ Samuel Thibault ]
   * Add KERNEL_NAME variable to configure the kernel package base name.
 
+  [ Arnaud Rebillout ]
+  * Drop arm64 cdrom depthcharge image for gru and hana boards. Their 32
+    MiB size limit has been known from the get-go, and it's no longer
+    possible to fit everything in.
+
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
 debian-installer (20250803) unstable; urgency=medium
