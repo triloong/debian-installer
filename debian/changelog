@@ -1,3 +1,9 @@
+debian-installer (20250803+deb13u5+~loong64+1) trixie; urgency=medium
+
+  * Build for loong64 trixie.
+
+ -- Miao Wang <shankerwangmiao@gmail.com>  Tue, 12 May 2026 08:43:05 +0800
+
 debian-installer (20250803+deb13u5) trixie; urgency=medium
 
   * Bump Linux kernel ABI to 6.12.86+deb13.
