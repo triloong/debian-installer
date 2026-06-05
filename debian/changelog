@@ -63,6 +63,9 @@ debian-installer (20250804) UNRELEASED; urgency=medium
     MiB size limit has been known from the get-go, and it's no longer
     possible to fit everything in.
 
+  [ Holger Wansing ]
+  * Target forky for installer.
+
  -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Aug 2025 23:59:32 +0200
 
 debian-installer (20250803) unstable; urgency=medium

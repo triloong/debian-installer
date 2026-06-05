@@ -44,13 +44,13 @@ PRESEED =
 DPKG_UNPACK_OPTIONS =
 
 # The codename of the Debian release that should be installed by default.
-DEBIAN_RELEASE = trixie
+DEBIAN_RELEASE = forky
 
 # The version (number and codename) of the Debian release targeted by the
 # installation images. (Only the codename is used while the version number
 # has not yet been determined.)
-DEBIAN_VERSION = 13 (trixie)
-DEBIAN_VERSION ?= trixie
+DEBIAN_VERSION = 14 (forky)
+DEBIAN_VERSION ?= forky
 
 # Define here from what release (codename!) components (udebs) should be taken
 # to build debian-installer. By default this is set to 'unstable' for building
