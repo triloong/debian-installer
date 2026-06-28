@@ -15,6 +15,8 @@ debian-installer (20250804) UNRELEASED; urgency=medium
   * Switch kernel udeb from kernel-image-* to linux-binary-*, matching
     changes on the kernel side.
   * Update translation-status.
+  * Upload to unstable as requested by Jochen Sprickerhof and Holger
+    Levsen from the reproducible builds team.
 
   [ Pascal Hambourg ]
   * Update doc/devel/partman-auto-recipe.txt. Closes: #1109467
