@@ -1,6 +1,7 @@
 debian-installer (20250803+deb13u6) UNRELEASED; urgency=medium
 
   * Bump Linux kernel ABI to 6.12.94+deb13.
+  * Adjust linux-image build-deps accordingly.
 
  -- Cyril Brulebois <kibi@debian.org>  Mon, 06 Jul 2026 22:41:50 +0200
 
