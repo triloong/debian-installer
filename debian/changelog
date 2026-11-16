@@ -1,3 +1,9 @@
+debian-installer (20250803+deb13u8) UNRELEASED; urgency=medium
+
+  * Bump Linux kernel ABI to 6.12.117+deb13.
+
+ -- Cyril Brulebois <kibi@debian.org>  Mon, 16 Nov 2026 10:25:46 +0100
+
 debian-installer (20250803+deb13u7) trixie; urgency=medium
 
   * Bump Linux kernel ABI to 6.12.107+deb13.
